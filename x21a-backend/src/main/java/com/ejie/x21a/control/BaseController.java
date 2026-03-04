@@ -62,7 +62,7 @@ public abstract class BaseController<T, ID, F> {
     }
 
     @PostMapping("/delete-multiple")
-    public void deleteMultiple(@RequestBody List<ID> ids) {
-        getService().deleteMultiple(ids);
+    public void deleteMultiple(@RequestBody FilterRequest<F> request) {
+        getService().deleteMultiple(request);
     }
 }

@@ -35,7 +35,7 @@ export class BaseService<T> {
         await api.delete(`${this.baseUrl}/${id}`);
     }
 
-    async deleteMultiple(ids: (string | number)[]): Promise<void> {
-        await api.post(`${this.baseUrl}/delete-multiple`, ids);
+    async deleteMultiple(deleteRequest: any): Promise<void> {
+        await api.post(`${this.baseUrl}/delete-multiple`, deleteRequest);
     }
 }

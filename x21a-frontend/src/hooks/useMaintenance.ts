@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BaseService } from '../services/base.service';
 
@@ -19,7 +19,7 @@ export function useMaintenance<T extends { id: string | number }, F>({
 }: UseMaintenanceOptions<T, F>) {
     const queryClient = useQueryClient();
     
-    // Estado de la Tabla (Servidor)
+    // Estado de la Tabla
     const [page, setPage] = useState(0);
     const [rows, setRows] = useState(20);
     const [sortField, setSortField] = useState<string | null>(null);
@@ -29,13 +29,15 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const [filters, setFilters] = useState<F>(initialFilters);
     const [appliedFilters, setAppliedFilters] = useState<F>(initialFilters);
 
-    // Estado de UI
+    // Estado de UI y Selección Global
     const [selectedItems, setSelectedItems] = useState<T[]>([]);
+    const [selectAllPages, setSelectAllPages] = useState(false);
+    const [deselectedItems, setDeselectedItems] = useState<T[]>([]);
+    
     const [itemDialog, setItemDialog] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [item, setItem] = useState<Partial<T>>({});
 
-    // Petición al Servidor con React Query
     const { data, isLoading, isError, refetch } = useQuery({
         queryKey: [entityKey, page, rows, sortField, sortOrder, appliedFilters],
         queryFn: () => service.filter({
@@ -50,6 +52,16 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const filteredData = data?.data || [];
     const totalRecords = data?.totalRecords || 0;
 
+    // Sincronizar selección visual al cambiar de página en modo Select All
+    useEffect(() => {
+        if (selectAllPages && filteredData.length > 0) {
+            const currentlySelectedOnPage = filteredData.filter(
+                (item: T) => !deselectedItems.some((d) => String(d.id) === String(item.id))
+            );
+            setSelectedItems(currentlySelectedOnPage);
+        }
+    }, [page, filteredData, selectAllPages, deselectedItems]);
+
     // Mutaciones
     const saveMutation = useMutation({
         mutationFn: (item: Partial<T>) => isEdit ? service.update(item.id!, item) : service.create(item),
@@ -62,16 +74,16 @@ export function useMaintenance<T extends { id: string | number }, F>({
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (ids: (string | number)[]) => service.deleteMultiple(ids),
+        mutationFn: (request: any) => service.deleteMultiple(request),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [entityKey] });
-            setSelectedItems([]);
+            handleClearSelection();
             onSuccess?.('Eliminado correctamente');
         },
         onError: () => onError?.('Error al eliminar')
     });
 
-    // Handlers de la Tabla
+    // Handlers
     const onPage = (event: any) => {
         setPage(event.page);
         setRows(event.rows);
@@ -83,9 +95,9 @@ export function useMaintenance<T extends { id: string | number }, F>({
     };
 
     const handleApplyFilters = () => {
-        setPage(0); // Volver a la primera página al filtrar
+        setPage(0);
         setAppliedFilters({ ...filters });
-        // Forzamos un refetch manual para asegurar datos frescos aunque el filtro no haya cambiado
+        handleClearSelection();
         setTimeout(() => refetch(), 0);
     };
 
@@ -93,6 +105,55 @@ export function useMaintenance<T extends { id: string | number }, F>({
         setFilters(defaults);
         setAppliedFilters(defaults);
         setPage(0);
+        handleClearSelection();
+    };
+
+    // Lógica de Selección
+    const onSelectionChange = (e: any) => {
+        const newVal = (e.value || []) as T[];
+        
+        if (selectAllPages) {
+            const newValIds = new Set(newVal.map(i => String(i.id)));
+            const currentPageIds = filteredData.map(i => String(i.id));
+            
+            // Los deseleccionados en la página actual son los que están en la página pero no en la nueva selección
+            const deselectedOnPage = filteredData.filter(i => !newValIds.has(String(i.id)));
+            
+            setDeselectedItems(prev => {
+                let updated = [...prev];
+                
+                // Añadimos los nuevos deseleccionados (evitando duplicados)
+                deselectedOnPage.forEach(item => {
+                    if (!updated.some(u => String(u.id) === String(item.id))) {
+                        updated.push(item);
+                    }
+                });
+                
+                // Si alguno de los que estaba en deselectedItems ahora SÍ está en newVal, lo quitamos (re-seleccionado)
+                updated = updated.filter(u => {
+                    if (currentPageIds.includes(String(u.id))) {
+                        return !newValIds.has(String(u.id));
+                    }
+                    return true;
+                });
+                
+                return updated;
+            });
+        }
+        
+        setSelectedItems(newVal);
+    };
+
+    const handleSelectAllPages = () => {
+        setSelectAllPages(true);
+        setDeselectedItems([]);
+        setSelectedItems([...filteredData]); 
+    };
+
+    const handleClearSelection = () => {
+        setSelectedItems([]);
+        setSelectAllPages(false);
+        setDeselectedItems([]);
     };
 
     const openNew = (initialState: Partial<T> = {}) => {
@@ -112,37 +173,21 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const saveItem = () => saveMutation.mutate(item);
 
     const deleteSelected = () => {
-        if (selectedItems.length > 0) {
-            deleteMutation.mutate(selectedItems.map(i => i.id));
-        }
+        deleteMutation.mutate({
+            selectAll: selectAllPages,
+            selectedIds: selectAllPages ? [] : selectedItems.map(i => i.id),
+            deselectedIds: selectAllPages ? deselectedItems.map(i => i.id) : [],
+            filter: appliedFilters
+        });
     };
 
     return {
-        filteredData,
-        totalRecords,
-        selectedItems,
-        setSelectedItems,
-        isLoading,
-        isError,
-        itemDialog,
-        isEdit,
-        item,
-        setItem,
-        filters,
-        setFilters,
-        page,
-        rows,
-        sortField,
-        sortOrder,
-        onPage,
-        onSort,
-        handleApplyFilters,
-        handleClearFilters,
-        openNew,
-        openEdit,
-        closeDialog,
-        saveItem,
-        deleteSelected,
-        isSaving: saveMutation.isPending
+        filteredData, totalRecords, selectedItems, setSelectedItems,
+        selectAllPages, deselectedItems, onSelectionChange,
+        handleSelectAllPages, handleClearSelection,
+        isLoading, isError, itemDialog, isEdit, item, setItem,
+        filters, setFilters, page, rows, sortField, sortOrder, onPage, onSort,
+        handleApplyFilters, handleClearFilters, openNew, openEdit,
+        closeDialog, saveItem, deleteSelected, isSaving: saveMutation.isPending
     };
 }

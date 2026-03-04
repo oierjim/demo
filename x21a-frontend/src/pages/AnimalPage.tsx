@@ -28,7 +28,10 @@ const AnimalPage: React.FC = () => {
     const dt = useRef<DataTable<Animal[]>>(null);
 
     const {
-        filteredData, totalRecords, selectedItems, setSelectedItems, isLoading, itemDialog, item, setItem,
+        filteredData, totalRecords, selectedItems, setSelectedItems,
+        selectAllPages, deselectedItems, onSelectionChange,
+        handleSelectAllPages, handleClearSelection,
+        isLoading, itemDialog, item, setItem,
         filters, setFilters, page, rows, sortField, sortOrder, onPage, onSort,
         handleApplyFilters, handleClearFilters, openNew, openEdit,
         closeDialog, saveItem, deleteSelected, isSaving
@@ -67,9 +70,7 @@ const AnimalPage: React.FC = () => {
     ), [t, closeDialog, saveItem, isSaving]);
 
     const onFilterKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            handleApplyFilters();
-        }
+        if (e.key === 'Enter') handleApplyFilters();
     };
 
     return (
@@ -83,15 +84,15 @@ const AnimalPage: React.FC = () => {
 
             <Card className="mb-4 card">
                 <div className="grid align-items-end" onKeyDown={onFilterKeyDown}>
-                    <div className="col-12 md:col-3">
+                    <div className="col-12 md:col-2">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.nombre')}</label>
                         <InputText value={filters.nombre} onChange={(e) => setFilters({...filters, nombre: e.target.value})} placeholder={t('domain:animal.nombre')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
-                    <div className="col-12 md:col-3">
+                    <div className="col-12 md:col-2">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.raza')}</label>
                         <InputText value={filters.raza} onChange={(e) => setFilters({...filters, raza: e.target.value})} placeholder={t('domain:animal.raza')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
-                    <div className="col-12 md:col-6 flex gap-2">
+                    <div className="col-12 md:col-2 flex gap-2">
                         <Button label={t('common:actions.filter')} icon="pi pi-search" className="p-button-sm px-3" outlined onClick={handleApplyFilters} style={{ height: '39px', width: 'auto' }} />
                         <Button label={t('common:actions.clean')} icon="pi pi-filter-slash" className="p-button-sm p-button-secondary px-3" outlined onClick={() => handleClearFilters(DEFAULT_FILTERS)} style={{ height: '39px', width: 'auto' }} />
                     </div>
@@ -102,15 +103,36 @@ const AnimalPage: React.FC = () => {
                 <div className="flex flex-wrap gap-2">
                     <Button label={t('common:actions.new')} icon="pi pi-plus" severity="success" onClick={() => openNew({ nombre: '', raza: '', peso: 0, altura: 0, fechaNacimiento: new Date() })} raised />
                     <Button label={t('common:actions.edit')} icon="pi pi-pencil" severity="info" disabled={selectedItems.length !== 1} onClick={() => openEdit(selectedItems[0])} />
-                    <Button label={t('common:actions.delete')} icon="pi pi-trash" severity="danger" disabled={selectedItems.length === 0} onClick={confirmDelete} />
+                    <Button label={t('common:actions.delete')} icon="pi pi-trash" severity="danger" disabled={selectedItems.length === 0 && !selectAllPages} onClick={confirmDelete} />
                 </div>
             } right={
                 <Button label={t('common:actions.export')} icon="pi pi-upload" severity="secondary" onClick={() => dt.current?.exportCSV()} text />
             }></Toolbar>
 
+            {selectedItems.length > 0 && selectedItems.length === filteredData.length && !selectAllPages && totalRecords > filteredData.length && (
+                <div className="bg-slate-100 border-round-xl p-3 mb-3 flex align-items-center justify-content-center shadow-1 animate-fadein border-1 border-slate-200">
+                    <i className="pi pi-info-circle text-slate-600 mr-3" style={{ fontSize: '1.2rem' }}></i>
+                    <span className="text-slate-700 mr-2 text-sm font-medium">
+                        {t('pages:selection.pageSelected', { count: selectedItems.length })}
+                    </span>
+                    <Button label={t('pages:selection.selectAll', { total: totalRecords })} className="p-button-link p-0 font-bold text-sm text-blue-600 hover:underline" onClick={handleSelectAllPages} />
+                </div>
+            )}
+
+            {selectAllPages && (
+                <div className="bg-slate-800 border-round-xl p-3 mb-3 flex align-items-center justify-content-center shadow-2 animate-fadein text-slate-300 border-1 border-slate-900">
+                    <i className="pi pi-check-circle text-green-400 mr-3" style={{ fontSize: '1.2rem' }}></i>
+                    <span className="mr-3 text-sm font-medium">
+                        {t('pages:selection.allSelected', { total: totalRecords })}
+                        {deselectedItems.length > 0 && t('pages:selection.exceptions', { count: deselectedItems.length })}
+                    </span>
+                    <Button label={t('pages:selection.clear')} className="p-button-link p-0 text-slate-300 underline font-bold text-sm hover:text-white" onClick={handleClearSelection} />
+                </div>
+            )}
+
             <div className="p-datatable-container shadow-3 border-round-xl bg-white mb-8">
-                <DataTable key={i18n.language} ref={dt} value={filteredData} lazy paginator first={page * rows} rows={rows} totalRecords={totalRecords} onPage={onPage} onSort={onSort} sortField={sortField || ''} sortOrder={sortOrder as any} selectionMode="multiple" selection={selectedItems} onSelectionChange={(e) => setSelectedItems(e.value)} rowsPerPageOptions={[20, 50, 100]} dataKey="id" className="p-datatable-sm" stripedRows rowHover responsiveLayout="scroll" emptyMessage={t('common:messages.noData')} loading={isLoading}
-                    paginatorLeft={<span className="text-xs text-slate-400 ml-2">{t('components:paginator.selected', { count: selectedItems.length })}</span>}
+                <DataTable key={i18n.language} ref={dt} value={filteredData} lazy paginator first={page * rows} rows={rows} totalRecords={totalRecords} onPage={onPage} onSort={onSort} sortField={sortField || ''} sortOrder={sortOrder as any} selectionMode="multiple" selection={selectedItems} onSelectionChange={onSelectionChange} rowsPerPageOptions={[20, 50, 100]} dataKey="id" className="p-datatable-sm" stripedRows rowHover responsiveLayout="scroll" emptyMessage={t('common:messages.noData')} loading={isLoading}
+                    paginatorLeft={<span className="text-xs text-slate-400 ml-2">{t('components:paginator.selected', { count: selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length })}</span>}
                     paginatorRight={<span className="text-xs text-slate-400 mr-2">{t('components:paginator.total', { count: totalRecords })}</span>}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown" paginatorDropdownAppendTo="self">
                     <Column selectionMode="multiple" headerStyle={{ width: '3rem', backgroundColor: '#f8fafc' }}></Column>

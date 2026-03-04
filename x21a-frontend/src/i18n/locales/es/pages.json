@@ -1,11 +1,7 @@
 {
   "maintenance": {
     "title": "Mantenimiento de Expedientes",
-    "dialogTitle": "Detalle del Expediente",
-    "filters": {
-      "dateFrom": "Fecha Desde",
-      "dateTo": "Fecha Hasta"
-    }
+    "dialogTitle": "Detalle del Expediente"
   },
   "personas": {
     "title": "Mantenimiento de Personas",
@@ -14,6 +10,16 @@
   "animales": {
     "title": "Mantenimiento de Animales",
     "dialogTitle": "Detalle de Animal"
+  },
+  "filters": {
+    "dateFrom": "Desde",
+    "dateTo": "Hasta",
+    "fechaAperturaDesde": "Apertura Desde",
+    "fechaAperturaHasta": "Apertura Hasta",
+    "fechaNacimientoDesde": "Nacimiento Desde",
+    "fechaNacimientoHasta": "Nacimiento Hasta",
+    "pesoDesde": "Peso Mín",
+    "pesoHasta": "Peso Máx"
   },
   "menu": {
     "home": "Inicio",
@@ -28,5 +34,12 @@
   "layout": {
     "appName": "UDA Demo App",
     "footer": "EJIE - Gobierno Vasco. Todos los derechos reservados."
+  },
+  "selection": {
+    "pageSelected": "Se han seleccionado los {{count}} registros de esta página.",
+    "selectAll": "Seleccionar los {{total}} registros en total",
+    "allSelected": "Has seleccionado los {{total}} registros del mantenimiento.",
+    "exceptions": " (menos {{count}} excepciones)",
+    "clear": "Limpiar selección"
   }
 }

@@ -7,12 +7,41 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 
+import com.ejie.x21a.model.FilterRequest;
+import org.springframework.transaction.annotation.Transactional;
+
 public abstract class BaseService<T, ID, F> {
     
     protected abstract JpaRepository<T, ID> getRepository();
     
-    // Cada servicio específico implementará su propia lógica de filtrado
     protected abstract Specification<T> getSpecification(F filter);
+
+    @Transactional
+    public void deleteMultiple(FilterRequest<F> request) {
+        if (request.isSelectAll()) {
+            // Caso 1: Borrar todo lo que cumpla el filtro EXCEPTO los deseleccionados
+            JpaSpecificationExecutor<T> executor = (JpaSpecificationExecutor<T>) getRepository();
+            Specification<T> spec = getSpecification(request.getFilter());
+            
+            List<T> itemsToDelete = executor.findAll(spec);
+            itemsToDelete.forEach(item -> {
+                try {
+                    // Usamos Reflection para obtener el id
+                    String id = (String) item.getClass().getMethod("getId").invoke(item);
+                    if (request.getDeselectedIds() == null || !request.getDeselectedIds().contains(id)) {
+                        getRepository().delete(item);
+                    }
+                } catch (Exception e) {
+                    getRepository().delete(item);
+                }
+            });
+        } else {
+            // Caso 2: Borrar solo los IDs seleccionados explícitamente
+            if (request.getSelectedIds() != null) {
+                request.getSelectedIds().forEach(id -> getRepository().deleteById((ID) id));
+            }
+        }
+    }
 
     public Page<T> filter(F filter, Pageable pageable) {
         JpaSpecificationExecutor<T> executor = (JpaSpecificationExecutor<T>) getRepository();
@@ -34,9 +63,5 @@ public abstract class BaseService<T, ID, F> {
 
     public void deleteById(ID id) {
         getRepository().deleteById(id);
-    }
-
-    public void deleteMultiple(List<ID> ids) {
-        ids.forEach(id -> getRepository().deleteById(id));
     }
 }

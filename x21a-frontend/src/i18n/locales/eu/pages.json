@@ -1,11 +1,7 @@
 {
   "maintenance": {
     "title": "Espedienteen Mantentzea",
-    "dialogTitle": "Espedientearen Xehetasuna",
-    "filters": {
-      "dateFrom": "Hasiera Data",
-      "dateTo": "Amaiera Data"
-    }
+    "dialogTitle": "Espedientearen Xehetasuna"
   },
   "personas": {
     "title": "Pertsonen Mantentzea",
@@ -14,6 +10,16 @@
   "animales": {
     "title": "Animalien Mantentzea",
     "dialogTitle": "Animaliaren Xehetasuna"
+  },
+  "filters": {
+    "dateFrom": "Hasiera",
+    "dateTo": "Amaiera",
+    "fechaAperturaDesde": "Hasiera Irekiera",
+    "fechaAperturaHasta": "Amaiera Irekiera",
+    "fechaNacimientoDesde": "Hasiera Jaiotzea",
+    "fechaNacimientoHasta": "Amaiera Jaiotzea",
+    "pesoDesde": "Gutxieneko Pisua",
+    "pesoHasta": "Gehienezko Pisua"
   },
   "menu": {
     "home": "Hasiera",
@@ -28,5 +34,12 @@
   "layout": {
     "appName": "UDA Demo App",
     "footer": "EJIE - Eusko Jaurlaritza. Eskubide guztiak erreserbatuta."
+  },
+  "selection": {
+    "pageSelected": "Orrialde honetako {{count}} erregistroak hautatu dira.",
+    "selectAll": "Hautatu guztira {{total}} erregistroak",
+    "allSelected": "Mantentze-laneko {{total}} erregistroak hautatu dituzu.",
+    "exceptions": " ({{count}} salbuespen gutxiago)",
+    "clear": "Garbitu hautapena"
   }
 }

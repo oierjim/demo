@@ -1,5 +1,6 @@
 package com.ejie.x21a.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,6 +10,7 @@ import java.util.Date;
 @Table(name = "EXPEDIENTES")
 public class Expediente {
     @Id
+    @Column(name = "REFERENCIA")
     private String referencia; // Esta es la PK real
     
     private String solicitante;

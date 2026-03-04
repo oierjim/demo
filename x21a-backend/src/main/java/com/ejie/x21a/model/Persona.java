@@ -1,5 +1,6 @@
 package com.ejie.x21a.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,6 +10,7 @@ import java.util.Date;
 @Table(name = "PERSONAS")
 public class Persona {
     @Id
+    @Column(name = "DNI")
     private String dni; // Esta es la PK real
 
     private String nombre;
