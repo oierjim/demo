@@ -27,7 +27,11 @@ public abstract class BaseService<T, ID, F> {
             itemsToDelete.forEach(item -> {
                 try {
                     // Usamos Reflection para obtener el id
-                    String id = (String) item.getClass().getMethod("getId").invoke(item);
+                    // 1. Obtener el resultado como Object
+                    Object idValue = item.getClass().getMethod("getId").invoke(item);
+
+                    // 2. Convertirlo a String de forma segura
+                    String id = (idValue != null) ? idValue.toString() : null;
                     if (request.getDeselectedIds() == null || !request.getDeselectedIds().contains(id)) {
                         getRepository().delete(item);
                     }

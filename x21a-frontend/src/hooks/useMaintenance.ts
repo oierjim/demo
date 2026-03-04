@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { BaseService } from '../services/base.service';
 
@@ -34,6 +34,12 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const [selectAllPages, setSelectAllPages] = useState(false);
     const [deselectedItems, setDeselectedItems] = useState<T[]>([]);
     
+    // REF para acceso instantáneo en manejadores de eventos (evita stale closures)
+    const selectAllPagesRef = useRef(selectAllPages);
+    useEffect(() => {
+        selectAllPagesRef.current = selectAllPages;
+    }, [selectAllPages]);
+
     const [itemDialog, setItemDialog] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [item, setItem] = useState<Partial<T>>({});
@@ -112,7 +118,8 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const onSelectionChange = (e: any) => {
         const newVal = (e.value || []) as T[];
         
-        if (selectAllPages) {
+        // Usamos el REF para evitar stale closures con PrimeReact DataTable
+        if (selectAllPagesRef.current) {
             const newValIds = new Set(newVal.map(i => String(i.id)));
             const currentPageIds = filteredData.map(i => String(i.id));
             
@@ -173,10 +180,11 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const saveItem = () => saveMutation.mutate(item);
 
     const deleteSelected = () => {
+        const isAllSelected = selectAllPagesRef.current;
         deleteMutation.mutate({
-            selectAll: selectAllPages,
-            selectedIds: selectAllPages ? [] : selectedItems.map(i => i.id),
-            deselectedIds: selectAllPages ? deselectedItems.map(i => i.id) : [],
+            selectAll: isAllSelected,
+            selectedIds: isAllSelected ? [] : selectedItems.map(i => i.id),
+            deselectedIds: isAllSelected ? deselectedItems.map(i => i.id) : [],
             filter: appliedFilters
         });
     };
