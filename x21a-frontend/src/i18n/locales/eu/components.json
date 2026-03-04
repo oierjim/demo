@@ -1,0 +1,10 @@
+{
+  "paginator": {
+    "selected": "{{count}} hautatuta",
+    "total": "Guztira: {{count}} erregistro",
+    "report": "{first} - {last} / {totalRecords}"
+  },
+  "calendar": {
+    "placeholder": "uuuu/hh/ee"
+  }
+}

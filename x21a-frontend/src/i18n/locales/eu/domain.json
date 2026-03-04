@@ -1,0 +1,35 @@
+{
+  "expediente": {
+    "reference": "Erreferentzia",
+    "applicant": "Eskatzailea",
+    "dateOpen": "Irekiera Data",
+    "status": "Egoera",
+    "dateClose": "Itxiera Data",
+    "lastStep": "Azken Tramitea",
+    "entity": "Espedientea"
+  },
+  "persona": {
+    "dni": "NAN",
+    "nombre": "Izena",
+    "apellido1": "Lehen Abizena",
+    "apellido2": "Bigarren Abizena",
+    "fechaNacimiento": "Jaiotze Data",
+    "email": "Posta elektronikoa",
+    "entity": "Pertsona"
+  },
+  "animal": {
+    "nombre": "Izena",
+    "raza": "Arraza",
+    "fechaNacimiento": "Jaiotze Data",
+    "peso": "Pisua (kg)",
+    "altura": "Altuera (cm)",
+    "entity": "Animalia"
+  },
+  "status": {
+    "open": "Irekita",
+    "pending": "Zain",
+    "closed": "Itxita",
+    "inProcess": "Prozesuan",
+    "any": "Edozein"
+  }
+}

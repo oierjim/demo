@@ -1,0 +1,32 @@
+{
+  "maintenance": {
+    "title": "Mantenimiento de Expedientes",
+    "dialogTitle": "Detalle del Expediente",
+    "filters": {
+      "dateFrom": "Fecha Desde",
+      "dateTo": "Fecha Hasta"
+    }
+  },
+  "personas": {
+    "title": "Mantenimiento de Personas",
+    "dialogTitle": "Detalle de Persona"
+  },
+  "animales": {
+    "title": "Mantenimiento de Animales",
+    "dialogTitle": "Detalle de Animal"
+  },
+  "menu": {
+    "home": "Inicio",
+    "management": "Gestión",
+    "maintenance": "Mantenimientos",
+    "maintenance_exp": "Expedientes",
+    "maintenance_per": "Personas",
+    "maintenance_ani": "Animales",
+    "reports": "Reportes",
+    "settings": "Configuración"
+  },
+  "layout": {
+    "appName": "UDA Demo App",
+    "footer": "EJIE - Gobierno Vasco. Todos los derechos reservados."
+  }
+}

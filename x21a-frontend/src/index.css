@@ -1,0 +1,227 @@
+:root {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --surface-ground: #edf1f4; /* Blanco roto / Gris sutil */
+  --surface-section: #ffffff;
+  --primary-color: #3b82f6;
+  --text-color: #1e293b;
+  --text-secondary-color: #64748b;
+  --border-radius: 12px;
+}
+
+body {
+  margin: 0;
+  background-color: var(--surface-ground);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+}
+
+/* Tarjetas profesionales: Sombra con más contraste y profundidad */
+.card {
+  background: var(--surface-section);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.main-content {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header estilizado integrado con el fondo roto */
+.app-header {
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: var(--surface-ground);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary-color);
+}
+
+.app-footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-secondary-color);
+  font-size: 0.875rem;
+}
+
+.p-component {
+  transition: all 0.2s ease;
+}
+
+/* Botón del calendario integrado con el input */
+.p-calendar .p-inputtext {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.p-datepicker-trigger {
+    background: transparent !important;
+    color: var(--primary-color) !important;
+    border: 1px solid #cbd5e1 !important;
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    height: 39px !important; /* Altura idéntica al input */
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.p-datepicker-trigger:hover {
+    background: var(--surface-ground) !important;
+}
+
+/* Forzar posición del calendario debajo del input */
+.calendar-popup-below {
+    margin-top: 2px !important;
+    z-index: 10000 !important;
+}
+
+/* Calendario más compacto y elegante */
+.p-datepicker {
+    padding: 0.5rem !important;
+    min-width: 250px !important;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+}
+
+.p-datepicker table {
+    font-size: 0.8rem !important;
+}
+
+.p-datepicker table th {
+    padding: 0.3rem !important;
+}
+
+.p-datepicker table td {
+    padding: 0.1rem !important;
+}
+
+.p-datepicker table td > span {
+    width: 2rem !important;
+    height: 2rem !important;
+    border-radius: 6px !important;
+}
+
+.p-datepicker .p-datepicker-header {
+    padding: 0.4rem !important;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.p-datepicker .p-datepicker-buttonbar {
+    padding: 0.4rem 0 !important;
+}
+
+/* Combo de filas por página compacto y sin cortes */
+.p-paginator .p-dropdown {
+    height: 2rem !important;
+    width: 4.8rem !important; /* Un poco más de ancho para 3 dígitos */
+}
+
+.p-paginator .p-dropdown .p-dropdown-trigger {
+    width: 1.5rem !important; /* Flecha más estrecha para dar espacio al texto */
+}
+
+.p-paginator .p-dropdown .p-dropdown-label {
+    padding: 0.25rem 0.4rem !important;
+    font-size: 0.8rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar el número */
+}
+
+/* Redondeado de tabla sin usar overflow-hidden en el padre */
+.p-datatable .p-datatable-thead > tr:first-child > th:first-child { border-top-left-radius: 12px; }
+.p-datatable .p-datatable-thead > tr:first-child > th:last-child { border-top-right-radius: 12px; }
+.p-datatable .p-paginator-bottom { 
+    border-bottom-left-radius: 12px; 
+    border-bottom-right-radius: 12px; 
+}
+
+/* Animación de apertura suave (tipo Fade) para evitar saltos visuales */
+.p-connected-overlay-enter {
+    opacity: 0 !important;
+    transform: scale(0.95) !important;
+}
+
+.p-connected-overlay-enter-active {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    transition: opacity 150ms, transform 150ms cubic-bezier(0, 0, 0.2, 1) !important;
+}
+
+.p-connected-overlay-exit {
+    opacity: 1 !important;
+}
+
+.p-connected-overlay-exit-active {
+    opacity: 0 !important;
+    transition: opacity 100ms linear !important;
+}
+
+/* Ocultar preventivamente overlays que aún no se han posicionado (están en 0,0) */
+.p-datepicker[style*="top: 0px"][style*="left: 0px"],
+.p-dropdown-panel[style*="top: 0px"][style*="left: 0px"] {
+    visibility: hidden !important;
+}
+
+.relative {
+    position: relative;
+}
+
+/* Paleta de colores SOFT para botones sólidos */
+.p-button.p-button-success:not(.p-button-text):not(.p-button-outlined) {
+    background: #34d399 !important; /* Emerald 400 */
+    border-color: #34d399 !important;
+}
+
+.p-button.p-button-info:not(.p-button-text):not(.p-button-outlined) {
+    background: #60a5fa !important; /* Blue 400 */
+    border-color: #60a5fa !important;
+}
+
+.p-button.p-button-danger:not(.p-button-text):not(.p-button-outlined) {
+    background: #fb7185 !important; /* Rose 400 */
+    border-color: #fb7185 !important;
+}
+
+.p-button.p-button-secondary:not(.p-button-text):not(.p-button-outlined) {
+    background: #94a3b8 !important; /* Slate 400 */
+    border-color: #94a3b8 !important;
+}
+
+/* Estados deshabilitados para botones sólidos (aún más claros) */
+.p-button:disabled:not(.p-button-text):not(.p-button-outlined) {
+    opacity: 0.5 !important;
+    background: #e2e8f0 !important; /* Gris muy claro */
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important; /* Texto en gris suave */
+}

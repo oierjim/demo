@@ -1,0 +1,30 @@
+{
+  "actions": {
+    "filter": "Filtrar",
+    "clean": "Limpiar",
+    "new": "Nuevo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "export": "Exportar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "select": "Seleccionar",
+    "confirm": "Confirmar"
+  },
+  "messages": {
+    "loading": "Cargando...",
+    "noData": "No se han encontrado datos.",
+    "noOptions": "No hay opciones disponibles",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar los elementos seleccionados?",
+    "deleteTitle": "Confirmación de Borrado",
+    "success": "Éxito",
+    "error": "Error",
+    "saved": "Guardado correctamente",
+    "deleted": "Eliminado correctamente",
+    "updated": "Actualizado correctamente"
+  },
+  "labels": {
+    "yes": "Sí, borrar",
+    "no": "No"
+  }
+}

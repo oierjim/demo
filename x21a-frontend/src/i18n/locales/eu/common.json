@@ -1,0 +1,30 @@
+{
+  "actions": {
+    "filter": "Filtratu",
+    "clean": "Garbitu",
+    "new": "Berria",
+    "edit": "Editatu",
+    "delete": "Ezabatu",
+    "export": "Esportatu",
+    "save": "Gorde",
+    "cancel": "Utzi",
+    "select": "Hautatu",
+    "confirm": "Berretsi"
+  },
+  "messages": {
+    "loading": "Kargatzen...",
+    "noData": "Ez da daturik aurkitu.",
+    "noOptions": "Ez dago aukerarik eskuragarri",
+    "confirmDelete": "Ziur al zaude hautatutako elementuak ezabatu nahi dituzula?",
+    "deleteTitle": "Ezabatzeko Berrespena",
+    "success": "Arrakasta",
+    "error": "Errorea",
+    "saved": "Zuzen gorde da",
+    "deleted": "Zuzen ezabatu da",
+    "updated": "Zuzen eguneratu da"
+  },
+  "labels": {
+    "yes": "Bai, ezabatu",
+    "no": "Ez"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "expediente": {
+    "reference": "Referencia",
+    "applicant": "Solicitante",
+    "dateOpen": "Fecha Apertura",
+    "status": "Estado",
+    "dateClose": "Fecha Cierre",
+    "lastStep": "Último Trámite",
+    "entity": "Expediente"
+  },
+  "persona": {
+    "dni": "DNI",
+    "nombre": "Nombre",
+    "apellido1": "Primer Apellido",
+    "apellido2": "Segundo Apellido",
+    "fechaNacimiento": "Fecha Nacimiento",
+    "email": "Email",
+    "entity": "Persona"
+  },
+  "animal": {
+    "nombre": "Nombre",
+    "raza": "Raza",
+    "fechaNacimiento": "Fecha Nacimiento",
+    "peso": "Peso (kg)",
+    "altura": "Altura (cm)",
+    "entity": "Animal"
+  },
+  "status": {
+    "open": "Abierto",
+    "pending": "Pendiente",
+    "closed": "Cerrado",
+    "inProcess": "En Proceso",
+    "any": "Cualquiera"
+  }
+}

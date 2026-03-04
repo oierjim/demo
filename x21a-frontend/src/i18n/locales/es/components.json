@@ -1,0 +1,10 @@
+{
+  "paginator": {
+    "selected": "{{count}} seleccionados",
+    "total": "Total: {{count}} registros",
+    "report": "{first} - {last} de {totalRecords}"
+  },
+  "calendar": {
+    "placeholder": "dd/mm/aaaa"
+  }
+}

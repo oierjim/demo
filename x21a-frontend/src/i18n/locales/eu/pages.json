@@ -1,0 +1,32 @@
+{
+  "maintenance": {
+    "title": "Espedienteen Mantentzea",
+    "dialogTitle": "Espedientearen Xehetasuna",
+    "filters": {
+      "dateFrom": "Hasiera Data",
+      "dateTo": "Amaiera Data"
+    }
+  },
+  "personas": {
+    "title": "Pertsonen Mantentzea",
+    "dialogTitle": "Pertsonaren Xehetasuna"
+  },
+  "animales": {
+    "title": "Animalien Mantentzea",
+    "dialogTitle": "Animaliaren Xehetasuna"
+  },
+  "menu": {
+    "home": "Hasiera",
+    "management": "Kudeaketa",
+    "maintenance": "Mantentze-lanak",
+    "maintenance_exp": "Espedienteak",
+    "maintenance_per": "Pertsonak",
+    "maintenance_ani": "Animaliak",
+    "reports": "Txostenak",
+    "settings": "Konfigurazioa"
+  },
+  "layout": {
+    "appName": "UDA Demo App",
+    "footer": "EJIE - Eusko Jaurlaritza. Eskubide guztiak erreserbatuta."
+  }
+}
