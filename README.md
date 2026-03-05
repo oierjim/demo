@@ -1,6 +1,6 @@
 # udaDemoApp - Proyecto de Demostración
 
-Este repositorio contiene una aplicación completa de mantenimiento genérico con **Spring Boot (Backend)** y **React (Frontend)**. El proyecto está diseñado para ser altamente reutilizable y sigue las convenciones arquitectónicas de EJIE (UDA).
+Este repositorio contiene una aplicación completa de mantenimiento genérico con **Spring Boot (Backend)** y **React (Frontend)**. 
 
 ## 🚀 Guía de Inicio Rápido
 
@@ -29,7 +29,6 @@ El backend gestiona la persistencia de datos (H2), la seguridad y los servicios 
    ```bash
    mvn spring-boot:run
    ```
-   *La API estará disponible en `http://localhost:8080`.*
 
 ---
 
@@ -54,7 +53,7 @@ Interfaz de usuario moderna construida con PrimeReact y TanStack Query.
    ```bash
    npm run dev
    ```
-   *La aplicación estará disponible en `http://localhost:5173`.*
+
 
 ---
 
