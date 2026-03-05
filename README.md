@@ -60,9 +60,13 @@ Interfaz de usuario moderna construida con PrimeReact y TanStack Query.
 ## 🏗️ Arquitectura del Sistema
 
 ### Mantenimientos Genéricos
-El proyecto implementa un sistema de mantenimientos automáticos:
+El proyecto implementa un sistema de mantenimientos automáticos y altamente reutilizables:
 - **Backend**: `BaseController` y `BaseService` que gestionan CRUD y filtrado avanzado mediante `FilterRequest`.
-- **Frontend**: Hook `useMaintenance` que encapsula la lógica de paginación, filtrado, selección masiva (Select All Pages) y diálogos.
+- **Frontend**: 
+  - Componente **`DataTableTemplate`**: Unifica la visualización y gestión de tablas (multiselección, contadores, exportación).
+  - Hook **`useMaintenance`**: Encapsula la lógica de estado, paginación y comunicación con la API.
+
+Los mantenimientos actualmente implementados incluyen **Expedientes**, **Personas**, **Animales** y **Series TV**.
 
 ### Base de Datos
 - Utiliza **H2 Database** en modo archivo local (`./x21a-backend/data/x21aDB`).

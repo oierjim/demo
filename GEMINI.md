@@ -24,8 +24,12 @@ Ubicación: `x21a-backend/src/main/java/com/ejie/x21a/`
 Ubicación: `x21a-frontend/src/`
 
 - **`services/base.service.ts`**: Clase abstracta que encapsula las llamadas a la API genérica.
-- **Páginas de Mantenimiento**: Siguen un patrón común usando hooks para gestionar el estado de la tabla, filtros y diálogos de edición.
-- **Comunicación**: Las tablas envían el objeto `FilterRequest` y reciben un mapa con `data`, `totalRecords` y `page`.
+- **`components/DataTableTemplate.tsx`**: Componente unificado que centraliza toda la lógica de la tabla:
+  - Multiselección con soporte para "Select All Pages".
+  - Contadores de registros seleccionados y totales.
+  - Toolbar de acciones (Nuevo, Editar, Borrar, Exportar).
+  - Integración automática con el hook `useMaintenance`.
+- **Páginas de Mantenimiento**: Definen únicamente los filtros, las columnas y los campos del diálogo, delegando la estructura al `DataTableTemplate`.
 
 ## 🚀 Cómo añadir un nuevo mantenimiento (Ejemplo: "Vehiculos")
 
@@ -36,10 +40,10 @@ Ubicación: `x21a-frontend/src/`
     - Crear `VehiculoController extends BaseController<Vehiculo, Long, VehiculoFilter>`.
 2.  **Frontend**:
     - Crear `services/vehiculo.service.ts` extendiendo `BaseService`.
-    - Crear `pages/VehiculoPage.tsx` copiando la estructura de `ExpedientePage.tsx`. **Importante**: `ExpedientePage.tsx` es el componente de referencia ya que incluye la lógica validada de:
+    - Crear `pages/VehiculoPage.tsx` utilizando `DataTableTemplate`. Este componente garantiza por arquitectura:
         - Selección masiva a través de múltiples páginas ("Select All Pages").
-        - Filtrado avanzado con calendarios (Rangos de fechas).
-        - Internacionalización completa (i18n) en castellano y euskera.
+        - Filtrado avanzado y contadores de registros consistentes.
+        - Internacionalización completa (i18n).
         - Gestión de diálogos de edición y confirmación de borrado.
 
 ## 📌 Convenciones Importantes
