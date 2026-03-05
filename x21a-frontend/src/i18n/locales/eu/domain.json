@@ -32,6 +32,15 @@
     "premiere": "Estreinaldi Data",
     "entity": "TB Seriea"
   },
+  "pelicula": {
+    "title": "Izenburua",
+    "director": "Zuzendaria",
+    "genre": "Generoa",
+    "duration": "Iraupena",
+    "premiere": "Estreinaldia",
+    "oscar": "Oscarra du?",
+    "entity": "Filma"
+  },
   "status": {
     "open": "Irekita",
     "pending": "Zain",

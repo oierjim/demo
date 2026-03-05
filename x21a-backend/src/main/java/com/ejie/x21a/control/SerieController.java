@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.Random;
 
 @RestController
@@ -37,7 +37,7 @@ public class SerieController extends BaseController<Serie, Long, SerieFilter> {
                 serie.setTitulo(titulos[i % titulos.length] + " " + (i / titulos.length + 1));
                 serie.setTipo(tipos[i % tipos.length]);
                 serie.setPlataforma(plataformas[i % plataformas.length]);
-                serie.setFechaEstreno(LocalDate.now().minusDays(rand.nextInt(3650)));
+                serie.setFechaEstreno(new Date(System.currentTimeMillis() - (long)rand.nextInt(30) * 24 * 3600 * 1000));
                 service.save(serie);
             }
         }

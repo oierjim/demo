@@ -86,6 +86,11 @@ const MainLayout: React.FC = () => {
               label: t('pages:menu.maintenance_ser'),
               icon: 'pi pi-video',
               command: () => navigate('/series')
+            },
+            {
+              label: t('pages:menu.maintenance_pel'),
+              icon: 'pi pi-ticket',
+              command: () => navigate('/peliculas')
             }
           ]
         },

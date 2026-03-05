@@ -19,7 +19,15 @@ interface DataTableTemplateProps<T, F> {
     filterFields: (filters: F, setFilters: (f: F) => void) => React.ReactNode;
     dialogFields: (item: Partial<T>, setItem: (i: Partial<T>) => void) => React.ReactNode;
     dialogWidth?: string;
-    children: React.ReactNode; // Las columnas vendrán aquí
+    children: React.ReactNode;
+    
+    // Configuración opcional de funcionalidades
+    selectionMode?: 'single' | 'multiple' | 'none';
+    showNew?: boolean;
+    showEdit?: boolean;
+    showDelete?: boolean;
+    showExport?: boolean;
+    extraButtons?: (selectedItems: T[]) => React.ReactNode;
 }
 
 export function DataTableTemplate<T extends { id: any }, F>({
@@ -31,7 +39,13 @@ export function DataTableTemplate<T extends { id: any }, F>({
     filterFields,
     dialogFields,
     dialogWidth = '450px',
-    children
+    children,
+    selectionMode = 'multiple',
+    showNew = true,
+    showEdit = true,
+    showDelete = true,
+    showExport = true,
+    extraButtons
 }: DataTableTemplateProps<T, F>) {
     const { t, i18n } = useTranslation(['common', 'pages', 'components']);
     const toast = useRef<Toast>(null);
@@ -75,6 +89,10 @@ export function DataTableTemplate<T extends { id: any }, F>({
         if (e.key === 'Enter') handleApplyFilters();
     };
 
+    const isMultiple = selectionMode === 'multiple';
+    const isSingle = selectionMode === 'single';
+    const hasSelection = selectionMode !== 'none';
+
     return (
         <div className="maintenance-view animate-fadein">
             <Toast ref={toast} />
@@ -94,17 +112,20 @@ export function DataTableTemplate<T extends { id: any }, F>({
                 </div>
             </Card>
 
-            <Toolbar className="mb-4 bg-transparent border-none p-0" left={
-                <div className="flex flex-wrap gap-2">
-                    <Button label={t('common:actions.new')} icon="pi pi-plus" severity="success" onClick={() => openNew(newItemDefault as T)} raised />
-                    <Button label={t('common:actions.edit')} icon="pi pi-pencil" severity="info" disabled={selectedItems.length !== 1} onClick={() => openEdit(selectedItems[0])} />
-                    <Button label={t('common:actions.delete')} icon="pi pi-trash" severity="danger" disabled={selectedItems.length === 0 && !selectAllPages} onClick={confirmDelete} />
-                </div>
-            } right={
-                <Button label={t('common:actions.export')} icon="pi pi-upload" severity="secondary" onClick={() => dt.current?.exportCSV()} text />
-            }></Toolbar>
+            {(showNew || showEdit || showDelete || showExport || extraButtons) && (
+                <Toolbar className="mb-4 bg-transparent border-none p-0" left={
+                    <div className="flex flex-wrap gap-2">
+                        {showNew && <Button label={t('common:actions.new')} icon="pi pi-plus" severity="success" onClick={() => openNew(newItemDefault as T)} raised />}
+                        {showEdit && <Button label={t('common:actions.edit')} icon="pi pi-pencil" severity="info" disabled={selectedItems.length !== 1} onClick={() => openEdit(selectedItems[0])} />}
+                        {showDelete && <Button label={t('common:actions.delete')} icon="pi pi-trash" severity="danger" disabled={selectedItems.length === 0 && !selectAllPages} onClick={confirmDelete} />}
+                        {extraButtons && extraButtons(selectedItems)}
+                    </div>
+                } right={
+                    showExport ? <Button label={t('common:actions.export')} icon="pi pi-upload" severity="secondary" onClick={() => dt.current?.exportCSV()} text /> : null
+                }></Toolbar>
+            )}
 
-            {selectedItems.length > 0 && selectedItems.length === filteredData.length && !selectAllPages && totalRecords > filteredData.length && (
+            {isMultiple && selectedItems.length > 0 && selectedItems.length === filteredData.length && !selectAllPages && totalRecords > filteredData.length && (
                 <div className="bg-slate-100 border-round-xl p-3 mb-3 flex align-items-center justify-content-center shadow-1 animate-fadein border-1 border-slate-200">
                     <i className="pi pi-info-circle text-slate-600 mr-3" style={{ fontSize: '1.2rem' }}></i>
                     <span className="text-slate-700 mr-2 text-sm font-medium">
@@ -114,7 +135,7 @@ export function DataTableTemplate<T extends { id: any }, F>({
                 </div>
             )}
 
-            {selectAllPages && (
+            {isMultiple && selectAllPages && (
                 <div className="bg-slate-800 border-round-xl p-3 mb-3 flex align-items-center justify-content-center shadow-2 animate-fadein text-slate-300 border-1 border-slate-900">
                     <i className="pi pi-check-circle text-green-400 mr-3" style={{ fontSize: '1.2rem' }}></i>
                     <span className="mr-3 text-sm font-medium">
@@ -139,9 +160,15 @@ export function DataTableTemplate<T extends { id: any }, F>({
                     onSort={onSort} 
                     sortField={sortField || ''} 
                     sortOrder={sortOrder as any} 
-                    selectionMode="multiple" 
-                    selection={selectedItems} 
-                    onSelectionChange={onSelectionChange} 
+                    selectionMode={hasSelection ? (isMultiple ? "multiple" : "single") : undefined} 
+                    selection={hasSelection ? (isMultiple ? selectedItems : (selectedItems.length > 0 ? selectedItems[0] : null)) : null} 
+                    onSelectionChange={(e) => {
+                        if (isSingle) {
+                            onSelectionChange({ value: e.value ? [e.value] : [] });
+                        } else if (isMultiple) {
+                            onSelectionChange(e);
+                        }
+                    }} 
                     rowsPerPageOptions={[20, 50, 100]} 
                     dataKey="id" 
                     className="p-datatable-sm" 
@@ -150,7 +177,14 @@ export function DataTableTemplate<T extends { id: any }, F>({
                     responsiveLayout="scroll" 
                     emptyMessage={t('common:messages.noData')} 
                     loading={isLoading}
-                    paginatorLeft={<span className="text-xs text-slate-400 ml-2">{t('components:paginator.selected', { count: selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length })}</span>}
+                    paginatorLeft={hasSelection ? (
+                        <span className="text-xs text-slate-400 ml-2">
+                            {isMultiple && (selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length) > 0 
+                                ? t('components:paginator.selected', { count: selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length })
+                                : (isSingle && selectedItems.length > 0 ? t('components:paginator.selected', { count: 1 }) : '')
+                            }
+                        </span>
+                    ) : <div className="ml-2" />}
                     paginatorRight={<span className="text-xs text-slate-400 mr-2">{t('components:paginator.total', { count: totalRecords })}</span>}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown" 
                     paginatorDropdownAppendTo="self"

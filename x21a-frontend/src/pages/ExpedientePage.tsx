@@ -6,6 +6,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
+import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
 import { DataTableTemplate } from '../components/DataTableTemplate';
 import { expedienteService } from '../services/expediente.service';
@@ -51,6 +52,25 @@ const ExpedientePage: React.FC = () => {
             service={expedienteService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ estado: 'Abierto', referencia: '', solicitante: '', fechaApertura: new Date() }}
+            extraButtons={(selectedItems) => (
+                <>
+                    <Button 
+                        label="Tramitar" 
+                        icon="pi pi-cog" 
+                        severity="warning" 
+                        disabled={selectedItems.length === 0} 
+                        onClick={() => alert(`Tramitando ${selectedItems.length} expedientes`)} 
+                    />
+                    <Button 
+                        label="Imprimir" 
+                        icon="pi pi-print" 
+                        severity="secondary" 
+                        outlined
+                        disabled={selectedItems.length === 0} 
+                        onClick={() => alert(`Imprimiendo ${selectedItems.length} documentos...`)} 
+                    />
+                </>
+            )}
             filterFields={(filters, setFilters) => (
                 <>
                     <div className="col-12 md:col-2">

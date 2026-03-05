@@ -24,29 +24,28 @@ Ubicación: `x21a-backend/src/main/java/com/ejie/x21a/`
 Ubicación: `x21a-frontend/src/`
 
 - **`services/base.service.ts`**: Clase abstracta que encapsula las llamadas a la API genérica.
-- **`components/DataTableTemplate.tsx`**: Componente unificado que centraliza toda la lógica de la tabla:
-  - Multiselección con soporte para "Select All Pages".
-  - Contadores de registros seleccionados y totales.
-  - Toolbar de acciones (Nuevo, Editar, Borrar, Exportar).
+- **`components/DataTableTemplate.tsx`**: Componente unificado que centraliza toda la lógica de la tabla. Sus capacidades avanzadas incluyen:
+  - **`selectionMode`**: Permite elegir entre `'multiple'` (checkboxes y multiselección masiva), `'single'` (selección de una sola fila al hacer clic) o `'none'`.
+  - **Control de Botones**: Propiedades booleanas para ocultar/mostrar botones estándar: `showNew`, `showEdit`, `showDelete`, `showExport`.
+  - **`extraButtons`**: Slot para inyectar botones personalizados. Recibe los elementos seleccionados (`selectedItems`) como parámetro para habilitar/deshabilitar acciones dinámicamente.
   - Integración automática con el hook `useMaintenance`.
-- **Páginas de Mantenimiento**: Definen únicamente los filtros, las columnas y los campos del diálogo, delegando la estructura al `DataTableTemplate`.
 
 ## 🚀 Cómo añadir un nuevo mantenimiento (Ejemplo: "Vehiculos")
 
 1.  **Backend**:
-    - Crear `Vehiculo.java` (entidad) y `VehiculoFilter.java`.
-    - Crear `VehiculoRepository extends JpaRepository<Vehiculo, Long>, JpaSpecificationExecutor<Vehiculo>`.
-    - Crear `VehiculoService extends BaseService<Vehiculo, Long, VehiculoFilter>`.
-    - Crear `VehiculoController extends BaseController<Vehiculo, Long, VehiculoFilter>`.
+    - Crear `Vehiculo.java` (entidad) y `VehiculoFilter.java`. **Importante**: Usar siempre `java.util.Date` para todas las fechas.
+    - Crear `VehiculoRepository`.
+    - Crear `VehiculoService`.
+    - Crear `VehiculoController`.
 2.  **Frontend**:
     - Crear `services/vehiculo.service.ts` extendiendo `BaseService`.
-    - Crear `pages/VehiculoPage.tsx` utilizando `DataTableTemplate`. Este componente garantiza por arquitectura:
-        - Selección masiva a través de múltiples páginas ("Select All Pages").
-        - Filtrado avanzado y contadores de registros consistentes.
-        - Internacionalización completa (i18n).
-        - Gestión de diálogos de edición y confirmación de borrado.
+    - Crear `pages/VehiculoPage.tsx` utilizando `DataTableTemplate`.
 
 ## 📌 Convenciones Importantes
+
+### 📅 Gestión de Fechas
+- **Backend**: Todas las fechas en entidades y filtros deben ser **siempre `java.util.Date`**. Esto garantiza compatibilidad con los serializadores del proyecto.
+- **Frontend**: Los componentes `Calendar` de PrimeReact manejan objetos `Date` nativos, que son los que se envían al backend.
 
 ### 🆔 Gestión de IDs y Compatibilidad
 Para que el frontend genérico y el `BaseController` funcionen correctamente, cada entidad debe exponer un identificador bajo el nombre `id` en el JSON, independientemente de cómo se llame en la base de datos.
@@ -63,6 +62,10 @@ Para que el frontend genérico y el `BaseController` funcionen correctamente, ca
   ```
 - **Tipado**: El tipo de ID en el `BaseController<T, ID, F>` debe coincidir con el tipo de la PK (ej. `Long` para `Animal`, `String` para `Expediente`).
 - **Autonuméricos**: Usar `@GeneratedValue(strategy = GenerationType.IDENTITY)` siempre que la lógica de negocio no requiera un ID manual (como ocurre en `Animal`).
+
+### 📅 Gestión de Fechas
+- **Backend**: Por convención del proyecto, todas las fechas en los modelos (`@Entity`) y filtros (`Filter`) deben utilizar siempre **`java.util.Date`**. Se debe evitar el uso de `LocalDate` o `LocalDateTime` para mantener la compatibilidad con los serializadores configurados.
+- **Frontend**: El componente `Calendar` de PrimeReact maneja objetos `Date` nativos de JavaScript, que son compatibles con `java.util.Date`.
 
 ### 🗄️ Base de Datos y Persistencia
 - **H2 Database**: Los datos se guardan en `./data/x21aDB`. Si hay errores de esquema (ej. "column not found" tras un cambio en la entidad), borrar este archivo para que Hibernate regenere las tablas según el modelo actual.

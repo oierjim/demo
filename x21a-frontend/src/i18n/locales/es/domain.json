@@ -32,6 +32,15 @@
     "premiere": "Fecha Estreno",
     "entity": "Serie TV"
   },
+  "pelicula": {
+    "title": "Título",
+    "director": "Director",
+    "genre": "Género",
+    "duration": "Duración",
+    "premiere": "Estreno",
+    "oscar": "¿Tiene Oscar?",
+    "entity": "Película"
+  },
   "status": {
     "open": "Abierto",
     "pending": "Pendiente",

@@ -2,19 +2,16 @@ package com.ejie.x21a.model.filter;
 
 import java.util.Date;
 
-public class SerieFilter {
+public class PeliculaFilter {
     private String titulo;
-    private String tipo;
-    private String plataforma;
+    private String genero;
     private Date fechaEstrenoDesde;
     private Date fechaEstrenoHasta;
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
-    public String getPlataforma() { return plataforma; }
-    public void setPlataforma(String plataforma) { this.plataforma = plataforma; }
+    public String getGenero() { return genero; }
+    public void setGenero(String genero) { this.genero = genero; }
     public Date getFechaEstrenoDesde() { return fechaEstrenoDesde; }
     public void setFechaEstrenoDesde(Date fechaEstrenoDesde) { this.fechaEstrenoDesde = fechaEstrenoDesde; }
     public Date getFechaEstrenoHasta() { return fechaEstrenoHasta; }
