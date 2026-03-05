@@ -1,4 +1,4 @@
-# udaDemoApp - Proyecto de Demostración
+# Proyecto de Demostración
 
 Este repositorio contiene una aplicación completa de mantenimiento genérico con **Spring Boot (Backend)** y **React (Frontend)**. 
 
