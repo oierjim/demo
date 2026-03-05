@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage'
 import ExpedientePage from './pages/ExpedientePage'
 import PersonaPage from './pages/PersonaPage'
 import AnimalPage from './pages/AnimalPage'
+import SeriesPage from './pages/SeriesPage'
 import MainLayout from './layouts/MainLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import RoleProtectedRoute from './components/RoleProtectedRoute'
@@ -79,6 +80,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="animales" element={
               <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
                 <AnimalPage /> 
+              </RoleProtectedRoute>
+            } />
+            <Route path="series" element={
+              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                <SeriesPage /> 
               </RoleProtectedRoute>
             } />
           </Route>

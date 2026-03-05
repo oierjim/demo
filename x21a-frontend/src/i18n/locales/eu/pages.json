@@ -11,6 +11,10 @@
     "title": "Animalien Mantentzea",
     "dialogTitle": "Animaliaren Xehetasuna"
   },
+  "series": {
+    "title": "Serieen Mantentzea",
+    "dialogTitle": "Seriearen Xehetasuna"
+  },
   "filters": {
     "dateFrom": "Hasiera",
     "dateTo": "Amaiera",
@@ -18,6 +22,8 @@
     "fechaAperturaHasta": "Amaiera Irekiera",
     "fechaNacimientoDesde": "Hasiera Jaiotzea",
     "fechaNacimientoHasta": "Amaiera Jaiotzea",
+    "fechaEstrenoDesde": "Hasiera Estreinaldia",
+    "fechaEstrenoHasta": "Amaiera Estreinaldia",
     "pesoDesde": "Gutxieneko Pisua",
     "pesoHasta": "Gehienezko Pisua"
   },
@@ -28,6 +34,7 @@
     "maintenance_exp": "Espedienteak",
     "maintenance_per": "Pertsonak",
     "maintenance_ani": "Animaliak",
+    "maintenance_ser": "Telebista Sailak",
     "reports": "Txostenak",
     "settings": "Konfigurazioa"
   },

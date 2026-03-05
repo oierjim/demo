@@ -25,6 +25,13 @@
     "altura": "Altuera (cm)",
     "entity": "Animalia"
   },
+  "serie": {
+    "title": "Izenburua",
+    "type": "Generoa",
+    "platform": "Plataforma",
+    "premiere": "Estreinaldi Data",
+    "entity": "TB Seriea"
+  },
   "status": {
     "open": "Irekita",
     "pending": "Zain",

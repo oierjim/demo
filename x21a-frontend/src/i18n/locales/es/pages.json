@@ -11,6 +11,10 @@
     "title": "Mantenimiento de Animales",
     "dialogTitle": "Detalle de Animal"
   },
+  "series": {
+    "title": "Mantenimiento de Series",
+    "dialogTitle": "Detalle de la Serie"
+  },
   "filters": {
     "dateFrom": "Desde",
     "dateTo": "Hasta",
@@ -18,6 +22,8 @@
     "fechaAperturaHasta": "Apertura Hasta",
     "fechaNacimientoDesde": "Nacimiento Desde",
     "fechaNacimientoHasta": "Nacimiento Hasta",
+    "fechaEstrenoDesde": "Estreno Desde",
+    "fechaEstrenoHasta": "Estreno Hasta",
     "pesoDesde": "Peso Mín",
     "pesoHasta": "Peso Máx"
   },
@@ -28,6 +34,7 @@
     "maintenance_exp": "Expedientes",
     "maintenance_per": "Personas",
     "maintenance_ani": "Animales",
+    "maintenance_ser": "Series TV",
     "reports": "Reportes",
     "settings": "Configuración"
   },

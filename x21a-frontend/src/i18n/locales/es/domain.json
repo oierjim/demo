@@ -25,6 +25,13 @@
     "altura": "Altura (cm)",
     "entity": "Animal"
   },
+  "serie": {
+    "title": "Título",
+    "type": "Género",
+    "platform": "Plataforma",
+    "premiere": "Fecha Estreno",
+    "entity": "Serie TV"
+  },
   "status": {
     "open": "Abierto",
     "pending": "Pendiente",

@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "x21a-backend"
+		},
+		{
+			"path": "x21a-frontend"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.project.sourcePaths": [
+			"x21a-backend"
+		]
+	}
+}
