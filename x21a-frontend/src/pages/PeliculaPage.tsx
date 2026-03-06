@@ -31,12 +31,12 @@ const PeliculaPage: React.FC = () => {
     const { t, i18n } = useTranslation(['common', 'domain', 'pages', 'components']);
 
     const generos = useMemo(() => [
-        { label: 'Drama', value: 'Drama' },
-        { label: 'Acción', value: 'Acción' },
-        { label: 'Ciencia Ficción', value: 'Ciencia Ficción' },
-        { label: 'Terror', value: 'Terror' },
-        { label: 'Suspense', value: 'Suspense' }
-    ], []);
+        { label: t('domain:pelicula.genres.drama'), value: 'Drama' },
+        { label: t('domain:pelicula.genres.action'), value: 'Acción' },
+        { label: t('domain:pelicula.genres.scifi'), value: 'Ciencia Ficción' },
+        { label: t('domain:pelicula.genres.horror'), value: 'Terror' },
+        { label: t('domain:pelicula.genres.suspense'), value: 'Suspense' }
+    ], [t]);
 
     const oscarBodyTemplate = (rowData: Pelicula) => {
         return <i className={`pi ${rowData.oscar ? 'pi-star-fill text-yellow-500' : 'pi-star text-slate-300'}`} style={{ fontSize: '1.2rem' }}></i>;
@@ -51,13 +51,21 @@ const PeliculaPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
+    const validate = (item: Partial<Pelicula>) => {
+        const errors: Record<string, string> = {};
+        if (!item.titulo) errors.titulo = t('common:messages.required');
+        if (!item.director) errors.director = t('common:messages.required');
+        return errors;
+    };
+
     return (
         <DataTableTemplate<Pelicula, PeliculaFilters>
-            title={t('pages:peliculas.title', { defaultValue: 'Mantenimiento de Películas' })}
-            entityKey="peliculas"
+            title={t('pages:peliculas.title')}
+            entityKey="pelicula"
             service={peliculaService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ titulo: '', director: '', genero: 'Drama', duracion: 120, oscar: false, fechaEstreno: new Date() }}
+            validate={validate}
             selectionMode="single"
             showNew={false}
             showEdit={true}
@@ -65,11 +73,11 @@ const PeliculaPage: React.FC = () => {
             showExport={false}
             extraButtons={(selectedItems) => (
                 <Button 
-                    label="Ver Tráiler" 
+                    label={t('pages:peliculas.viewTrailer')} 
                     icon="pi pi-external-link" 
                     severity="help" 
                     disabled={selectedItems.length !== 1} 
-                    onClick={() => alert(`Abriendo tráiler de: ${selectedItems[0].titulo}`)} 
+                    onClick={() => alert(`${t('pages:peliculas.viewTrailer')}: ${selectedItems[0].titulo}`)} 
                 />
             )}
             filterFields={(filters, setFilters) => (
@@ -95,15 +103,17 @@ const PeliculaPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem, isReadOnly) => (
+            dialogFields={(item, setItem, errors, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:pelicula.title', { defaultValue: 'Título' })}</label>
-                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus className={!item.titulo ? 'p-invalid' : ''} disabled={isReadOnly} />
+                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.titulo} />
+                        {errors.titulo && <small className="p-error">{errors.titulo}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="director" className="font-bold block mb-2">{t('domain:pelicula.director', { defaultValue: 'Director' })}</label>
-                        <InputText id="director" value={item.director || ''} onChange={(e) => setItem({ ...item, director: e.target.value })} required disabled={isReadOnly} />
+                        <InputText id="director" value={item.director || ''} onChange={(e) => setItem({ ...item, director: e.target.value })} required disabled={isReadOnly} invalid={!!errors.director} />
+                        {errors.director && <small className="p-error">{errors.director}</small>}
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">

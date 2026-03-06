@@ -23,7 +23,9 @@
     "error": "Errorea",
     "saved": "Zuzen gorde da",
     "deleted": "Zuzen ezabatu da",
-    "updated": "Zuzen eguneratu da"
+    "updated": "Zuzen eguneratu da",
+    "required": "Eremu hau derrigorrezkoa da",
+    "invalidFormat": "Formatua ez da baliozkoa"
   },
   "labels": {
     "yes": "Bai, ezabatu",

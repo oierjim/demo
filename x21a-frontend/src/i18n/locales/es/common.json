@@ -23,7 +23,9 @@
     "error": "Error",
     "saved": "Guardado correctamente",
     "deleted": "Eliminado correctamente",
-    "updated": "Actualizado correctamente"
+    "updated": "Actualizado correctamente",
+    "required": "Este campo es obligatorio",
+    "invalidFormat": "El formato no es válido"
   },
   "labels": {
     "yes": "Sí, borrar",

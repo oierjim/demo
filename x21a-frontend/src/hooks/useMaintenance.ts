@@ -8,6 +8,7 @@ interface UseMaintenanceOptions<T, F> {
     initialFilters: F;
     onSuccess?: (message: string) => void;
     onError?: (message: string) => void;
+    validate?: (item: Partial<T>) => Record<string, string>;
 }
 
 export function useMaintenance<T extends { id: string | number }, F>({
@@ -15,7 +16,8 @@ export function useMaintenance<T extends { id: string | number }, F>({
     service,
     initialFilters,
     onSuccess,
-    onError
+    onError,
+    validate
 }: UseMaintenanceOptions<T, F>) {
     const queryClient = useQueryClient();
     
@@ -43,6 +45,7 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const [itemDialog, setItemDialog] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [item, setItem] = useState<Partial<T>>({});
+    const [errors, setErrors] = useState<Record<string, string>>({});
 
     const { data, isLoading, isError, refetch } = useQuery({
         queryKey: [entityKey, page, rows, sortField, sortOrder, appliedFilters],
@@ -74,9 +77,9 @@ export function useMaintenance<T extends { id: string | number }, F>({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [entityKey] });
             setItemDialog(false);
-            onSuccess?.('Operación realizada con éxito');
+            onSuccess?.(isEdit ? 'common:messages.updated' : 'common:messages.saved');
         },
-        onError: () => onError?.('Error al guardar')
+        onError: () => onError?.('common:messages.error')
     });
 
     const deleteMutation = useMutation({
@@ -84,9 +87,9 @@ export function useMaintenance<T extends { id: string | number }, F>({
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [entityKey] });
             handleClearSelection();
-            onSuccess?.('Eliminado correctamente');
+            onSuccess?.('common:messages.deleted');
         },
-        onError: () => onError?.('Error al eliminar')
+        onError: () => onError?.('common:messages.error')
     });
 
     // Handlers
@@ -166,18 +169,30 @@ export function useMaintenance<T extends { id: string | number }, F>({
     const openNew = (initialState: Partial<T> = {}) => {
         setIsEdit(false);
         setItem(initialState);
+        setErrors({});
         setItemDialog(true);
     };
 
     const openEdit = (selectedItem: T) => {
         setIsEdit(true);
         setItem({ ...selectedItem });
+        setErrors({});
         setItemDialog(true);
     };
 
-    const closeDialog = () => setItemDialog(false);
+    const closeDialog = () => {
+        setItemDialog(false);
+        setErrors({});
+    };
 
-    const saveItem = () => saveMutation.mutate(item);
+    const saveItem = () => {
+        if (validate) {
+            const validationErrors = validate(item);
+            setErrors(validationErrors);
+            if (Object.keys(validationErrors).length > 0) return;
+        }
+        saveMutation.mutate(item);
+    };
 
     const deleteSelected = () => {
         const isAllSelected = selectAllPagesRef.current;
@@ -194,6 +209,7 @@ export function useMaintenance<T extends { id: string | number }, F>({
         selectAllPages, deselectedItems, onSelectionChange,
         handleSelectAllPages, handleClearSelection,
         isLoading, isError, itemDialog, isEdit, item, setItem,
+        errors, setErrors,
         filters, setFilters, page, rows, sortField, sortOrder, onPage, onSort,
         handleApplyFilters, handleClearFilters, openNew, openEdit,
         closeDialog, saveItem, deleteSelected, isSaving: saveMutation.isPending

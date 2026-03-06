@@ -1,8 +1,5 @@
 {
-  "maintenance": {
-    "title": "Mantenimiento de Expedientes",
-    "dialogTitle": "Detalle del Expediente"
-  },
+
   "personas": {
     "title": "Mantenimiento de Personas",
     "dialogTitle": "Detalle de Persona"
@@ -14,6 +11,17 @@
   "series": {
     "title": "Mantenimiento de Series",
     "dialogTitle": "Detalle de la Serie"
+  },
+  "peliculas": {
+    "title": "Mantenimiento de Películas",
+    "dialogTitle": "Detalle de Película",
+    "viewTrailer": "Ver Tráiler"
+  },
+  "expedientes": {
+    "title": "Mantenimiento de Expedientes",
+    "dialogTitle": "Detalle del Expediente",
+    "process": "Tramitar",
+    "print": "Imprimir"
   },
   "filters": {
     "dateFrom": "Desde",

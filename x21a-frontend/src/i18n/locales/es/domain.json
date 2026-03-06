@@ -39,7 +39,22 @@
     "duration": "Duración",
     "premiere": "Estreno",
     "oscar": "¿Tiene Oscar?",
-    "entity": "Película"
+    "entity": "Película",
+    "genres": {
+      "drama": "Drama",
+      "action": "Acción",
+      "scifi": "Ciencia Ficción",
+      "horror": "Terror",
+      "suspense": "Suspense",
+      "comedy": "Comedia"
+    }
+  },
+  "platforms": {
+    "netflix": "Netflix",
+    "hbo": "HBO Max",
+    "disney": "Disney+",
+    "amazon": "Amazon Prime",
+    "apple": "Apple TV+"
   },
   "status": {
     "open": "Abierto",

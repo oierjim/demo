@@ -45,30 +45,38 @@ const ExpedientePage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
+    const validate = (item: Partial<Expediente>) => {
+        const errors: Record<string, string> = {};
+        if (!item.referencia) errors.referencia = t('common:messages.required');
+        if (!item.solicitante) errors.solicitante = t('common:messages.required');
+        return errors;
+    };
+
     return (
         <DataTableTemplate<Expediente, ExpedienteFilters>
             title={t('pages:maintenance.title')}
-            entityKey="expedientes"
+            entityKey="expediente"
             service={expedienteService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ estado: 'Abierto', referencia: '', solicitante: '', fechaApertura: new Date() }}
+            validate={validate}
             readOnly={true}
             extraButtons={(selectedItems) => (
                 <>
                     <Button 
-                        label="Tramitar" 
+                        label={t('pages:expedientes.process')} 
                         icon="pi pi-cog" 
                         severity="warning" 
                         disabled={selectedItems.length === 0} 
-                        onClick={() => alert(`Tramitando ${selectedItems.length} expedientes`)} 
+                        onClick={() => alert(`${t('pages:expedientes.process')} ${selectedItems.length} ${t('domain:expediente.entity')}`)} 
                     />
                     <Button 
-                        label="Imprimir" 
+                        label={t('pages:expedientes.print')} 
                         icon="pi pi-print" 
                         severity="secondary" 
                         outlined
                         disabled={selectedItems.length === 0} 
-                        onClick={() => alert(`Imprimiendo ${selectedItems.length} documentos...`)} 
+                        onClick={() => alert(`${t('pages:expedientes.print')} ${selectedItems.length} ...`)} 
                     />
                 </>
             )}
@@ -95,15 +103,17 @@ const ExpedientePage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem, isReadOnly) => (
+            dialogFields={(item, setItem, errors, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="referencia" className="font-bold block mb-2">{t('domain:expediente.reference')}</label>
-                        <InputText id="referencia" value={item.referencia || ''} onChange={(e) => setItem({ ...item, referencia: e.target.value })} required autoFocus className={!item.referencia ? 'p-invalid' : ''} disabled={isReadOnly} />
+                        <InputText id="referencia" value={item.referencia || ''} onChange={(e) => setItem({ ...item, referencia: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.referencia} />
+                        {errors.referencia && <small className="p-error">{errors.referencia}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="solicitante" className="font-bold block mb-2">{t('domain:expediente.applicant')}</label>
-                        <InputText id="solicitante" value={item.solicitante || ''} onChange={(e) => setItem({ ...item, solicitante: e.target.value })} required disabled={isReadOnly} />
+                        <InputText id="solicitante" value={item.solicitante || ''} onChange={(e) => setItem({ ...item, solicitante: e.target.value })} required disabled={isReadOnly} invalid={!!errors.solicitante} />
+                        {errors.solicitante && <small className="p-error">{errors.solicitante}</small>}
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-6">

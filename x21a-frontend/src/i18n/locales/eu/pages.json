@@ -1,8 +1,5 @@
 {
-  "maintenance": {
-    "title": "Espedienteen Mantentzea",
-    "dialogTitle": "Espedientearen Xehetasuna"
-  },
+
   "personas": {
     "title": "Pertsonen Mantentzea",
     "dialogTitle": "Pertsonaren Xehetasuna"
@@ -14,6 +11,17 @@
   "series": {
     "title": "Serieen Mantentzea",
     "dialogTitle": "Seriearen Xehetasuna"
+  },
+  "peliculas": {
+    "title": "Filmen Mantentzea",
+    "dialogTitle": "Filmaren Xehetasuna",
+    "viewTrailer": "Trailerra Ikusi"
+  },
+  "expedientes": {
+    "process": "Tramitatu",
+    "print": "Inprimatu",
+     "title": "Espedienteen Mantentzea",
+    "dialogTitle": "Espedientearen Xehetasuna"
   },
   "filters": {
     "dateFrom": "Hasiera",

@@ -17,7 +17,7 @@ interface DataTableTemplateProps<T, F> {
     initialFilters: F;
     newItemDefault: Partial<T>;
     filterFields: (filters: F, setFilters: (f: F) => void) => React.ReactNode;
-    dialogFields: (item: Partial<T>, setItem: (i: Partial<T>) => void, isReadOnly?: boolean) => React.ReactNode;
+    dialogFields: (item: Partial<T>, setItem: (i: Partial<T>) => void, errors: Record<string, string>, isReadOnly?: boolean) => React.ReactNode;
     dialogWidth?: string;
     children: React.ReactNode;
     
@@ -29,6 +29,8 @@ interface DataTableTemplateProps<T, F> {
     showExport?: boolean;
     extraButtons?: (selectedItems: T[]) => React.ReactNode;
     readOnly?: boolean;
+    validate?: (item: Partial<T>) => Record<string, string>;
+    entityNameKey?: string;
 }
 
 export function DataTableTemplate<T extends { id: any }, F>({
@@ -47,17 +49,19 @@ export function DataTableTemplate<T extends { id: any }, F>({
     showDelete = true,
     showExport = true,
     extraButtons,
-    readOnly = false
+    readOnly = false,
+    validate,
+    entityNameKey
 }: DataTableTemplateProps<T, F>) {
-    const { t, i18n } = useTranslation(['common', 'pages', 'components']);
+    const { t, i18n } = useTranslation(['common', 'pages', 'components', 'domain']);
     const toast = useRef<Toast>(null);
-    const dt = useRef<DataTable<T[]>>(null);
+    const dt = useRef<any>(null);
 
     const {
         filteredData, totalRecords, selectedItems,
         selectAllPages, deselectedItems, onSelectionChange,
         handleSelectAllPages, handleClearSelection,
-        isLoading, itemDialog, item, setItem,
+        isLoading, itemDialog, isEdit, item, setItem, errors,
         filters, setFilters, page, rows, sortField, sortOrder, onPage, onSort,
         handleApplyFilters, handleClearFilters, openNew, openEdit,
         closeDialog, saveItem, deleteSelected, isSaving
@@ -65,9 +69,20 @@ export function DataTableTemplate<T extends { id: any }, F>({
         entityKey,
         service,
         initialFilters,
-        onSuccess: (msg) => toast.current?.show({ severity: 'success', summary: t('common:messages.success'), detail: msg, life: 3000 }),
-        onError: (msg) => toast.current?.show({ severity: 'error', summary: t('common:messages.error'), detail: msg, life: 3000 })
+        validate,
+        onSuccess: (msg) => toast.current?.show({ severity: 'success', summary: t('common:messages.success'), detail: t(msg), life: 3000 }),
+        onError: (msg) => toast.current?.show({ severity: 'error', summary: t('common:messages.error'), detail: t(msg), life: 3000 })
     });
+
+    const isDetailMode = readOnly && isEdit;
+
+    const actionLabel = isDetailMode 
+        ? t('common:actions.detail') 
+        : (isEdit ? t('common:actions.edit') : t('common:actions.new'));
+    
+    const domainKey = entityNameKey || entityKey;
+    const entityLabel = t(`domain:${domainKey}.entity`);
+    const dynamicDialogTitle = `${actionLabel} ${entityLabel}`;
 
     const confirmDelete = useCallback(() => {
         confirmDialog({
@@ -82,8 +97,8 @@ export function DataTableTemplate<T extends { id: any }, F>({
 
     const dialogFooter = (
         <React.Fragment>
-            <Button label={readOnly ? t('common:actions.close') : t('common:actions.cancel')} icon="pi pi-times" outlined onClick={closeDialog} />
-            {!readOnly && <Button label={t('common:actions.save')} icon="pi pi-check" onClick={saveItem} loading={isSaving} />}
+            <Button label={isDetailMode ? t('common:actions.close') : t('common:actions.cancel')} icon="pi pi-times" outlined onClick={closeDialog} />
+            {!isDetailMode && <Button label={t('common:actions.save')} icon="pi pi-check" onClick={saveItem} loading={isSaving} />}
         </React.Fragment>
     );
 
@@ -150,46 +165,48 @@ export function DataTableTemplate<T extends { id: any }, F>({
 
             <div className="p-datatable-container shadow-3 border-round-xl bg-white mb-8">
                 <DataTable 
-                    key={i18n.language} 
-                    ref={dt} 
-                    value={filteredData} 
-                    lazy 
-                    paginator 
-                    first={page * rows} 
-                    rows={rows} 
-                    totalRecords={totalRecords} 
-                    onPage={onPage} 
-                    onSort={onSort} 
-                    sortField={sortField || ''} 
-                    sortOrder={sortOrder as any} 
-                    selectionMode={hasSelection ? (isMultiple ? "multiple" : "single") : undefined} 
-                    selection={hasSelection ? (isMultiple ? selectedItems : (selectedItems.length > 0 ? selectedItems[0] : null)) : null} 
-                    onSelectionChange={(e) => {
-                        if (isSingle) {
-                            onSelectionChange({ value: e.value ? [e.value] : [] });
-                        } else if (isMultiple) {
-                            onSelectionChange(e);
-                        }
-                    }} 
-                    rowsPerPageOptions={[20, 50, 100]} 
-                    dataKey="id" 
-                    className="p-datatable-sm" 
-                    stripedRows 
-                    rowHover 
-                    responsiveLayout="scroll" 
-                    emptyMessage={t('common:messages.noData')} 
-                    loading={isLoading}
-                    paginatorLeft={hasSelection ? (
-                        <span className="text-xs text-slate-400 ml-2">
-                            {isMultiple && (selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length) > 0 
-                                ? t('components:paginator.selected', { count: selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length })
-                                : (isSingle && selectedItems.length > 0 ? t('components:paginator.selected', { count: 1 }) : '')
+                    {...({
+                        key: i18n.language,
+                        ref: dt,
+                        value: filteredData,
+                        lazy: true,
+                        paginator: true,
+                        first: page * rows,
+                        rows: rows,
+                        totalRecords: totalRecords,
+                        onPage: onPage,
+                        onSort: onSort,
+                        sortField: sortField || '',
+                        sortOrder: sortOrder as any,
+                        selectionMode: hasSelection ? (isMultiple ? "multiple" : "single") : undefined,
+                        selection: hasSelection ? (isMultiple ? selectedItems : (selectedItems.length > 0 ? selectedItems[0] : null)) : null,
+                        onSelectionChange: (e: any) => {
+                            if (isSingle) {
+                                onSelectionChange({ value: e.value ? [e.value] : [] });
+                            } else if (isMultiple) {
+                                onSelectionChange(e);
                             }
-                        </span>
-                    ) : <div className="ml-2" />}
-                    paginatorRight={<span className="text-xs text-slate-400 mr-2">{t('components:paginator.total', { count: totalRecords })}</span>}
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown" 
-                    paginatorDropdownAppendTo="self"
+                        },
+                        rowsPerPageOptions: [20, 50, 100],
+                        dataKey: "id",
+                        className: "p-datatable-sm",
+                        stripedRows: true,
+                        rowHover: true,
+                        responsiveLayout: "scroll",
+                        emptyMessage: t('common:messages.noData'),
+                        loading: isLoading,
+                        paginatorLeft: hasSelection ? (
+                            <span className="text-xs text-slate-400 ml-2">
+                                {isMultiple && (selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length) > 0 
+                                    ? t('components:paginator.selected', { count: selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length })
+                                    : (isSingle && selectedItems.length > 0 ? t('components:paginator.selected', { count: 1 }) : '')
+                                }
+                            </span>
+                        ) : <div className="ml-2" />,
+                        paginatorRight: <span className="text-xs text-slate-400 mr-2">{t('components:paginator.total', { count: totalRecords })}</span>,
+                        paginatorTemplate: "FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown",
+                        paginatorDropdownAppendTo: "self"
+                    } as any)}
                 >
                     {children}
                 </DataTable>
@@ -198,13 +215,13 @@ export function DataTableTemplate<T extends { id: any }, F>({
             <Dialog 
                 visible={itemDialog} 
                 style={{ width: dialogWidth }} 
-                header={t('pages:maintenance.dialogTitle')} 
+                header={dynamicDialogTitle} 
                 modal 
                 className="p-fluid" 
                 footer={dialogFooter} 
                 onHide={closeDialog}
             >
-                {dialogFields(item, setItem, readOnly)}
+                {dialogFields(item, setItem, errors, isDetailMode)}
             </Dialog>
         </div>
     );

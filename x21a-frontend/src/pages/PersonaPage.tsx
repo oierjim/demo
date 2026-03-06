@@ -27,13 +27,28 @@ const PersonaPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
+    const validate = (item: Partial<Persona>) => {
+        const errors: Record<string, string> = {};
+        if (!item.dni) errors.dni = t('common:messages.required');
+        else if (!/^[0-9]{8}[A-Z]$/.test(item.dni)) errors.dni = t('common:messages.invalidFormat');
+        
+        if (!item.nombre) errors.nombre = t('common:messages.required');
+        if (!item.apellido1) errors.apellido1 = t('common:messages.required');
+        
+        if (!item.email) errors.email = t('common:messages.required');
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email)) errors.email = t('common:messages.invalidFormat');
+        
+        return errors;
+    };
+
     return (
         <DataTableTemplate<Persona, PersonaFilters>
             title={t('pages:personas.title')}
-            entityKey="personas"
+            entityKey="persona"
             service={personaService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ dni: '', nombre: '', apellido1: '', apellido2: '', email: '', fechaNacimiento: new Date() }}
+            validate={validate}
             filterFields={(filters, setFilters) => (
                 <>
                     <div className="col-12 md:col-2">
@@ -54,22 +69,25 @@ const PersonaPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem, isReadOnly) => (
+            dialogFields={(item, setItem, errors, isReadOnly) => (
                 <>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-4">
                             <label htmlFor="dni" className="font-bold block mb-2">{t('domain:persona.dni')}</label>
-                            <InputText id="dni" value={item.dni || ''} onChange={(e) => setItem({ ...item, dni: e.target.value })} required autoFocus disabled={isReadOnly} />
+                            <InputText id="dni" value={item.dni || ''} onChange={(e) => setItem({ ...item, dni: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.dni} />
+                            {errors.dni && <small className="p-error">{errors.dni}</small>}
                         </div>
                         <div className="field col-12 md:col-8">
                             <label htmlFor="nombre" className="font-bold block mb-2">{t('domain:persona.nombre')}</label>
-                            <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required disabled={isReadOnly} />
+                            <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required disabled={isReadOnly} invalid={!!errors.nombre} />
+                            {errors.nombre && <small className="p-error">{errors.nombre}</small>}
                         </div>
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="apellido1" className="font-bold block mb-2">{t('domain:persona.apellido1')}</label>
-                            <InputText id="apellido1" value={item.apellido1 || ''} onChange={(e) => setItem({ ...item, apellido1: e.target.value })} required disabled={isReadOnly} />
+                            <InputText id="apellido1" value={item.apellido1 || ''} onChange={(e) => setItem({ ...item, apellido1: e.target.value })} required disabled={isReadOnly} invalid={!!errors.apellido1} />
+                            {errors.apellido1 && <small className="p-error">{errors.apellido1}</small>}
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="apellido2" className="font-bold block mb-2">{t('domain:persona.apellido2')}</label>
@@ -83,7 +101,8 @@ const PersonaPage: React.FC = () => {
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="email" className="font-bold block mb-2">{t('domain:persona.email')}</label>
-                            <InputText id="email" value={item.email || ''} onChange={(e) => setItem({ ...item, email: e.target.value })} required disabled={isReadOnly} />
+                            <InputText id="email" value={item.email || ''} onChange={(e) => setItem({ ...item, email: e.target.value })} required disabled={isReadOnly} invalid={!!errors.email} />
+                            {errors.email && <small className="p-error">{errors.email}</small>}
                         </div>
                     </div>
                 </>

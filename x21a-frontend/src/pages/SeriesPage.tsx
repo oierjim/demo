@@ -30,20 +30,20 @@ const SeriesPage: React.FC = () => {
     const { t, i18n } = useTranslation(['common', 'domain', 'pages', 'components']);
 
     const tipos = useMemo(() => [
-        { label: 'Comedia', value: 'Comedia' },
-        { label: 'Drama', value: 'Drama' },
-        { label: 'Ciencia Ficción', value: 'Ciencia Ficción' },
-        { label: 'Terror', value: 'Terror' },
-        { label: 'Acción', value: 'Acción' }
-    ], []);
+        { label: t('domain:pelicula.genres.comedy'), value: 'Comedia' },
+        { label: t('domain:pelicula.genres.drama'), value: 'Drama' },
+        { label: t('domain:pelicula.genres.scifi'), value: 'Ciencia Ficción' },
+        { label: t('domain:pelicula.genres.horror'), value: 'Terror' },
+        { label: t('domain:pelicula.genres.action'), value: 'Acción' }
+    ], [t]);
 
     const plataformas = useMemo(() => [
-        { label: 'Netflix', value: 'Netflix' },
-        { label: 'HBO Max', value: 'HBO Max' },
-        { label: 'Disney+', value: 'Disney+' },
-        { label: 'Amazon Prime', value: 'Amazon Prime' },
-        { label: 'Apple TV+', value: 'Apple TV+' }
-    ], []);
+        { label: t('domain:platforms.netflix'), value: 'Netflix' },
+        { label: t('domain:platforms.hbo'), value: 'HBO Max' },
+        { label: t('domain:platforms.disney'), value: 'Disney+' },
+        { label: t('domain:platforms.amazon'), value: 'Amazon Prime' },
+        { label: t('domain:platforms.apple'), value: 'Apple TV+' }
+    ], [t]);
 
     const tipoBodyTemplate = (rowData: Serie) => {
         const iconMap: any = { 'Comedia': '😂', 'Drama': '😢', 'Ciencia Ficción': '👽', 'Terror': '👻', 'Acción': '💥' };
@@ -64,13 +64,20 @@ const SeriesPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
+    const validate = (item: Partial<Serie>) => {
+        const errors: Record<string, string> = {};
+        if (!item.titulo) errors.titulo = t('common:messages.required');
+        return errors;
+    };
+
     return (
         <DataTableTemplate<Serie, SerieFilters>
             title={t('pages:series.title')}
-            entityKey="series"
+            entityKey="serie"
             service={serieService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ titulo: '', tipo: 'Comedia', plataforma: 'Netflix', fechaEstreno: new Date() }}
+            validate={validate}
             filterFields={(filters, setFilters) => (
                 <>
                     <div className="col-12 md:col-3">
@@ -94,11 +101,12 @@ const SeriesPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem, isReadOnly) => (
+            dialogFields={(item, setItem, errors, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:serie.title')}</label>
-                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus className={!item.titulo ? 'p-invalid' : ''} disabled={isReadOnly} />
+                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.titulo} />
+                        {errors.titulo && <small className="p-error">{errors.titulo}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="tipo" className="font-bold block mb-2">{t('domain:serie.type')}</label>

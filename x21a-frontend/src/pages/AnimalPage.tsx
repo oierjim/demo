@@ -26,6 +26,13 @@ const AnimalPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
+    const validate = (item: Partial<Animal>) => {
+        const errors: Record<string, string> = {};
+        if (!item.nombre) errors.nombre = t('common:messages.required');
+        if (!item.raza) errors.raza = t('common:messages.required');
+        return errors;
+    };
+
     return (
         <DataTableTemplate<Animal, AnimalFilters>
             title={t('pages:animales.title')}
@@ -33,6 +40,7 @@ const AnimalPage: React.FC = () => {
             service={animalService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ nombre: '', raza: '', peso: 0, altura: 0, fechaNacimiento: new Date() }}
+            validate={validate}
             filterFields={(filters, setFilters) => (
                 <>
                     <div className="col-12 md:col-2">
@@ -45,15 +53,17 @@ const AnimalPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem, isReadOnly) => (
+            dialogFields={(item, setItem, errors, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="nombre" className="font-bold block mb-2">{t('domain:animal.nombre')}</label>
-                        <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required autoFocus className={!item.nombre ? 'p-invalid' : ''} disabled={isReadOnly} />
+                        <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.nombre} />
+                        {errors.nombre && <small className="p-error">{errors.nombre}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="raza" className="font-bold block mb-2">{t('domain:animal.raza')}</label>
-                        <InputText id="raza" value={item.raza || ''} onChange={(e) => setItem({ ...item, raza: e.target.value })} required disabled={isReadOnly} />
+                        <InputText id="raza" value={item.raza || ''} onChange={(e) => setItem({ ...item, raza: e.target.value })} required disabled={isReadOnly} invalid={!!errors.raza} />
+                        {errors.raza && <small className="p-error">{errors.raza}</small>}
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">

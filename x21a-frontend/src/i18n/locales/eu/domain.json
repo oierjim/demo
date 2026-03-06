@@ -39,7 +39,22 @@
     "duration": "Iraupena",
     "premiere": "Estreinaldia",
     "oscar": "Oscarra du?",
-    "entity": "Filma"
+    "entity": "Filma",
+    "genres": {
+      "drama": "Drama",
+      "action": "Akzioa",
+      "scifi": "Zientzia-fikzioa",
+      "horror": "Beldurra",
+      "suspense": "Suspensea",
+      "comedy": "Komedia"
+    }
+  },
+  "platforms": {
+    "netflix": "Netflix",
+    "hbo": "HBO Max",
+    "disney": "Disney+",
+    "amazon": "Amazon Prime",
+    "apple": "Apple TV+"
   },
   "status": {
     "open": "Irekita",
