@@ -54,36 +54,36 @@ const PersonaPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem) => (
+            dialogFields={(item, setItem, isReadOnly) => (
                 <>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-4">
                             <label htmlFor="dni" className="font-bold block mb-2">{t('domain:persona.dni')}</label>
-                            <InputText id="dni" value={item.dni || ''} onChange={(e) => setItem({ ...item, dni: e.target.value })} required autoFocus />
+                            <InputText id="dni" value={item.dni || ''} onChange={(e) => setItem({ ...item, dni: e.target.value })} required autoFocus disabled={isReadOnly} />
                         </div>
                         <div className="field col-12 md:col-8">
                             <label htmlFor="nombre" className="font-bold block mb-2">{t('domain:persona.nombre')}</label>
-                            <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required />
+                            <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required disabled={isReadOnly} />
                         </div>
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="apellido1" className="font-bold block mb-2">{t('domain:persona.apellido1')}</label>
-                            <InputText id="apellido1" value={item.apellido1 || ''} onChange={(e) => setItem({ ...item, apellido1: e.target.value })} required />
+                            <InputText id="apellido1" value={item.apellido1 || ''} onChange={(e) => setItem({ ...item, apellido1: e.target.value })} required disabled={isReadOnly} />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="apellido2" className="font-bold block mb-2">{t('domain:persona.apellido2')}</label>
-                            <InputText id="apellido2" value={item.apellido2 || ''} onChange={(e) => setItem({ ...item, apellido2: e.target.value })} />
+                            <InputText id="apellido2" value={item.apellido2 || ''} onChange={(e) => setItem({ ...item, apellido2: e.target.value })} disabled={isReadOnly} />
                         </div>
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="fechaNac" className="font-bold block mb-2">{t('domain:persona.fechaNacimiento')}</label>
-                            <Calendar id="fechaNac" value={item.fechaNacimiento instanceof Date ? item.fechaNacimiento : (item.fechaNacimiento ? new Date(item.fechaNacimiento) : null)} onChange={(e) => setItem({ ...item, fechaNacimiento: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar id="fechaNac" value={item.fechaNacimiento instanceof Date ? item.fechaNacimiento : (item.fechaNacimiento ? new Date(item.fechaNacimiento) : null)} onChange={(e) => setItem({ ...item, fechaNacimiento: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="email" className="font-bold block mb-2">{t('domain:persona.email')}</label>
-                            <InputText id="email" value={item.email || ''} onChange={(e) => setItem({ ...item, email: e.target.value })} required />
+                            <InputText id="email" value={item.email || ''} onChange={(e) => setItem({ ...item, email: e.target.value })} required disabled={isReadOnly} />
                         </div>
                     </div>
                 </>

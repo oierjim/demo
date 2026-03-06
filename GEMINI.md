@@ -27,6 +27,7 @@ Ubicación: `x21a-frontend/src/`
 - **`components/DataTableTemplate.tsx`**: Componente unificado que centraliza toda la lógica de la tabla. Sus capacidades avanzadas incluyen:
   - **`selectionMode`**: Permite elegir entre `'multiple'` (checkboxes y multiselección masiva), `'single'` (selección de una sola fila al hacer clic) o `'none'`.
   - **Control de Botones**: Propiedades booleanas para ocultar/mostrar botones estándar: `showNew`, `showEdit`, `showDelete`, `showExport`.
+  - **`readOnly`**: Si se establece en `true`, el botón de edición se convierte en un botón de "Detalle" (icono de ojo), el diálogo de edición desactiva todos los campos (`disabled`) y oculta el botón de guardar, dejando solo el botón de cerrar.
   - **`extraButtons`**: Slot para inyectar botones personalizados. Recibe los elementos seleccionados (`selectedItems`) como parámetro para habilitar/deshabilitar acciones dinámicamente.
   - Integración automática con el hook `useMaintenance`.
 

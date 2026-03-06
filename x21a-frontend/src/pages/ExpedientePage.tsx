@@ -52,6 +52,7 @@ const ExpedientePage: React.FC = () => {
             service={expedienteService}
             initialFilters={DEFAULT_FILTERS}
             newItemDefault={{ estado: 'Abierto', referencia: '', solicitante: '', fechaApertura: new Date() }}
+            readOnly={true}
             extraButtons={(selectedItems) => (
                 <>
                     <Button 
@@ -94,33 +95,33 @@ const ExpedientePage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem) => (
+            dialogFields={(item, setItem, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="referencia" className="font-bold block mb-2">{t('domain:expediente.reference')}</label>
-                        <InputText id="referencia" value={item.referencia || ''} onChange={(e) => setItem({ ...item, referencia: e.target.value })} required autoFocus className={!item.referencia ? 'p-invalid' : ''} />
+                        <InputText id="referencia" value={item.referencia || ''} onChange={(e) => setItem({ ...item, referencia: e.target.value })} required autoFocus className={!item.referencia ? 'p-invalid' : ''} disabled={isReadOnly} />
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="solicitante" className="font-bold block mb-2">{t('domain:expediente.applicant')}</label>
-                        <InputText id="solicitante" value={item.solicitante || ''} onChange={(e) => setItem({ ...item, solicitante: e.target.value })} required />
+                        <InputText id="solicitante" value={item.solicitante || ''} onChange={(e) => setItem({ ...item, solicitante: e.target.value })} required disabled={isReadOnly} />
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-6">
                             <label htmlFor="fecha" className="font-bold block mb-2">{t('domain:expediente.dateOpen')}</label>
-                            <Calendar id="fecha" value={item.fechaApertura instanceof Date ? item.fechaApertura : (item.fechaApertura ? new Date(item.fechaApertura) : null)} onChange={(e) => setItem({ ...item, fechaApertura: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar id="fecha" value={item.fechaApertura instanceof Date ? item.fechaApertura : (item.fechaApertura ? new Date(item.fechaApertura) : null)} onChange={(e) => setItem({ ...item, fechaApertura: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field col-6">
                             <label htmlFor="fechaCierre" className="font-bold block mb-2">{t('domain:expediente.dateClose')}</label>
-                            <Calendar id="fechaCierre" value={item.fechaCierre instanceof Date ? item.fechaCierre : (item.fechaCierre ? new Date(item.fechaCierre) : null)} onChange={(e) => setItem({ ...item, fechaCierre: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar id="fechaCierre" value={item.fechaCierre instanceof Date ? item.fechaCierre : (item.fechaCierre ? new Date(item.fechaCierre) : null)} onChange={(e) => setItem({ ...item, fechaCierre: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="ultimoTramite" className="font-bold block mb-2">{t('domain:expediente.lastStep')}</label>
-                        <InputText id="ultimoTramite" value={item.ultimoTramite || ''} onChange={(e) => setItem({ ...item, ultimoTramite: e.target.value })} />
+                        <InputText id="ultimoTramite" value={item.ultimoTramite || ''} onChange={(e) => setItem({ ...item, ultimoTramite: e.target.value })} disabled={isReadOnly} />
                     </div>
                     <div className="field">
                         <label htmlFor="estado" className="font-bold block mb-2">{t('domain:expediente.status')}</label>
-                        <Dropdown id="estado" value={item.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setItem({ ...item, estado: e.value })} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} />
+                        <Dropdown id="estado" value={item.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setItem({ ...item, estado: e.value })} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
                     </div>
                 </>
             )}

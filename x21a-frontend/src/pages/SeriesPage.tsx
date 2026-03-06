@@ -94,23 +94,23 @@ const SeriesPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem) => (
+            dialogFields={(item, setItem, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:serie.title')}</label>
-                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus className={!item.titulo ? 'p-invalid' : ''} />
+                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus className={!item.titulo ? 'p-invalid' : ''} disabled={isReadOnly} />
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="tipo" className="font-bold block mb-2">{t('domain:serie.type')}</label>
-                        <Dropdown id="tipo" value={item.tipo} options={tipos} onChange={(e) => setItem({ ...item, tipo: e.value })} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} />
+                        <Dropdown id="tipo" value={item.tipo} options={tipos} onChange={(e) => setItem({ ...item, tipo: e.value })} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="plataforma" className="font-bold block mb-2">{t('domain:serie.platform')}</label>
-                        <Dropdown id="plataforma" value={item.plataforma} options={plataformas} onChange={(e) => setItem({ ...item, plataforma: e.value })} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} />
+                        <Dropdown id="plataforma" value={item.plataforma} options={plataformas} onChange={(e) => setItem({ ...item, plataforma: e.value })} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
                     </div>
                     <div className="field">
                         <label htmlFor="fechaEstreno" className="font-bold block mb-2">{t('domain:serie.premiere')}</label>
-                        <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem({ ...item, fechaEstreno: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon />
+                        <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem({ ...item, fechaEstreno: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon disabled={isReadOnly} />
                     </div>
                 </>
             )}

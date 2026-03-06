@@ -17,7 +17,7 @@ interface DataTableTemplateProps<T, F> {
     initialFilters: F;
     newItemDefault: Partial<T>;
     filterFields: (filters: F, setFilters: (f: F) => void) => React.ReactNode;
-    dialogFields: (item: Partial<T>, setItem: (i: Partial<T>) => void) => React.ReactNode;
+    dialogFields: (item: Partial<T>, setItem: (i: Partial<T>) => void, isReadOnly?: boolean) => React.ReactNode;
     dialogWidth?: string;
     children: React.ReactNode;
     
@@ -28,6 +28,7 @@ interface DataTableTemplateProps<T, F> {
     showDelete?: boolean;
     showExport?: boolean;
     extraButtons?: (selectedItems: T[]) => React.ReactNode;
+    readOnly?: boolean;
 }
 
 export function DataTableTemplate<T extends { id: any }, F>({
@@ -45,7 +46,8 @@ export function DataTableTemplate<T extends { id: any }, F>({
     showEdit = true,
     showDelete = true,
     showExport = true,
-    extraButtons
+    extraButtons,
+    readOnly = false
 }: DataTableTemplateProps<T, F>) {
     const { t, i18n } = useTranslation(['common', 'pages', 'components']);
     const toast = useRef<Toast>(null);
@@ -80,8 +82,8 @@ export function DataTableTemplate<T extends { id: any }, F>({
 
     const dialogFooter = (
         <React.Fragment>
-            <Button label={t('common:actions.cancel')} icon="pi pi-times" outlined onClick={closeDialog} />
-            <Button label={t('common:actions.save')} icon="pi pi-check" onClick={saveItem} loading={isSaving} />
+            <Button label={readOnly ? t('common:actions.close') : t('common:actions.cancel')} icon="pi pi-times" outlined onClick={closeDialog} />
+            {!readOnly && <Button label={t('common:actions.save')} icon="pi pi-check" onClick={saveItem} loading={isSaving} />}
         </React.Fragment>
     );
 
@@ -116,7 +118,7 @@ export function DataTableTemplate<T extends { id: any }, F>({
                 <Toolbar className="mb-4 bg-transparent border-none p-0" left={
                     <div className="flex flex-wrap gap-2">
                         {showNew && <Button label={t('common:actions.new')} icon="pi pi-plus" severity="success" onClick={() => openNew(newItemDefault as T)} raised />}
-                        {showEdit && <Button label={t('common:actions.edit')} icon="pi pi-pencil" severity="info" disabled={selectedItems.length !== 1} onClick={() => openEdit(selectedItems[0])} />}
+                        {showEdit && <Button label={readOnly ? t('common:actions.detail') : t('common:actions.edit')} icon={readOnly ? "pi pi-eye" : "pi pi-pencil"} severity="info" disabled={selectedItems.length !== 1} onClick={() => openEdit(selectedItems[0])} />}
                         {showDelete && <Button label={t('common:actions.delete')} icon="pi pi-trash" severity="danger" disabled={selectedItems.length === 0 && !selectAllPages} onClick={confirmDelete} />}
                         {extraButtons && extraButtons(selectedItems)}
                     </div>
@@ -202,7 +204,7 @@ export function DataTableTemplate<T extends { id: any }, F>({
                 footer={dialogFooter} 
                 onHide={closeDialog}
             >
-                {dialogFields(item, setItem)}
+                {dialogFields(item, setItem, readOnly)}
             </Dialog>
         </div>
     );

@@ -95,32 +95,32 @@ const PeliculaPage: React.FC = () => {
                     </div>
                 </>
             )}
-            dialogFields={(item, setItem) => (
+            dialogFields={(item, setItem, isReadOnly) => (
                 <>
                     <div className="field mb-4">
                         <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:pelicula.title', { defaultValue: 'Título' })}</label>
-                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus className={!item.titulo ? 'p-invalid' : ''} />
+                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required autoFocus className={!item.titulo ? 'p-invalid' : ''} disabled={isReadOnly} />
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="director" className="font-bold block mb-2">{t('domain:pelicula.director', { defaultValue: 'Director' })}</label>
-                        <InputText id="director" value={item.director || ''} onChange={(e) => setItem({ ...item, director: e.target.value })} required />
+                        <InputText id="director" value={item.director || ''} onChange={(e) => setItem({ ...item, director: e.target.value })} required disabled={isReadOnly} />
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="genero" className="font-bold block mb-2">{t('domain:pelicula.genre', { defaultValue: 'Género' })}</label>
-                            <Dropdown id="genero" value={item.genero} options={generos} onChange={(e) => setItem({ ...item, genero: e.value })} placeholder={t('common:actions.select')} appendTo={() => document.body} />
+                            <Dropdown id="genero" value={item.genero} options={generos} onChange={(e) => setItem({ ...item, genero: e.value })} placeholder={t('common:actions.select')} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="duracion" className="font-bold block mb-2">{t('domain:pelicula.duration', { defaultValue: 'Duración (min)' })}</label>
-                            <InputNumber id="duracion" value={item.duracion} onValueChange={(e) => setItem({ ...item, duracion: e.value || 0 })} suffix=" min" />
+                            <InputNumber id="duracion" value={item.duracion} onValueChange={(e) => setItem({ ...item, duracion: e.value || 0 })} suffix=" min" disabled={isReadOnly} />
                         </div>
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="fechaEstreno" className="font-bold block mb-2">{t('domain:pelicula.premiere', { defaultValue: 'Fecha Estreno' })}</label>
-                        <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem({ ...item, fechaEstreno: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon />
+                        <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem({ ...item, fechaEstreno: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon disabled={isReadOnly} />
                     </div>
                     <div className="field-checkbox">
-                        <Checkbox id="oscar" onChange={e => setItem({ ...item, oscar: e.checked || false })} checked={item.oscar || false} />
+                        <Checkbox id="oscar" onChange={e => setItem({ ...item, oscar: e.checked || false })} checked={item.oscar || false} disabled={isReadOnly} />
                         <label htmlFor="oscar" className="ml-2 font-bold">{t('domain:pelicula.oscar', { defaultValue: '¿Tiene Oscar?' })}</label>
                     </div>
                 </>
