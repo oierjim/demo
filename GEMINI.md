@@ -25,55 +25,42 @@ Ubicación: `x21a-frontend/src/`
 
 - **`services/base.service.ts`**: Clase abstracta que encapsula las llamadas a la API genérica.
 - **`components/DataTableTemplate.tsx`**: Componente unificado que centraliza toda la lógica de la tabla. Sus capacidades avanzadas incluyen:
-  - **`selectionMode`**: Permite elegir entre `'multiple'` (checkboxes y multiselección masiva), `'single'` (selección de una sola fila al hacer clic) o `'none'`.
-  - **Control de Botones**: Propiedades booleanas para ocultar/mostrar botones estándar: `showNew`, `showEdit`, `showDelete`, `showExport`.
-  - **`readOnly`**: Si se establece en `true`, el botón de edición se convierte en un botón de "Detalle" (icono de ojo), el diálogo de edición desactiva todos los campos (`disabled`) y oculta el botón de guardar, dejando solo el botón de cerrar.
-  - **`extraButtons`**: Slot para inyectar botones personalizados. Recibe los elementos seleccionados (`selectedItems`) como parámetro para habilitar/deshabilitar acciones dinámicamente.
+  - **`selectionMode`**: Permite elegir entre `'multiple'`, `'single'` o `'none'`.
+  - **Control de Botones**: Propiedades booleanas `showNew`, `showEdit`, `showDelete`, `showExport`.
+  - **`readOnly`**: Si es `true`, la edición se convierte en modo "Detalle" (solo lectura). Los registros **nuevos** siguen siendo editables aunque esta propiedad sea `true`.
+  - **Validación**: Propiedad `validate` que recibe una función `(item) => Record<string, string>`. Los errores se pasan automáticamente a `dialogFields`.
+  - **Títulos Dinámicos**: El título del diálogo se genera como `[Acción] [Entidad]` (ej: "Nuevo Animal"). Usa la propiedad `entityNameKey` para buscar la traducción en `domain.json`.
+  - **`extraButtons`**: Slot para inyectar botones personalizados basados en la selección.
   - Integración automática con el hook `useMaintenance`.
 
 ## 🚀 Cómo añadir un nuevo mantenimiento (Ejemplo: "Vehiculos")
 
 1.  **Backend**:
     - Crear `Vehiculo.java` (entidad) y `VehiculoFilter.java`. **Importante**: Usar siempre `java.util.Date` para todas las fechas.
-    - Crear `VehiculoRepository`.
-    - Crear `VehiculoService`.
-    - Crear `VehiculoController`.
+    - Crear `VehiculoRepository`, `VehiculoService` y `VehiculoController`.
 2.  **Frontend**:
     - Crear `services/vehiculo.service.ts` extendiendo `BaseService`.
     - Crear `pages/VehiculoPage.tsx` utilizando `DataTableTemplate`.
+    - Definir la lógica de validación y pasarla al prop `validate`.
+    - Asegurar que los inputs en `dialogFields` usen la propiedad `invalid={!!errors.campo}` y muestren el mensaje `<small className="p-error">{errors.campo}</small>`.
 
 ## 📌 Convenciones Importantes
 
 ### 📅 Gestión de Fechas
-- **Backend**: Todas las fechas en entidades y filtros deben ser **siempre `java.util.Date`**. Esto garantiza compatibilidad con los serializadores del proyecto.
-- **Frontend**: Los componentes `Calendar` de PrimeReact manejan objetos `Date` nativos, que son los que se envían al backend.
+- **Backend**: Por convención, todas las fechas en los modelos (`@Entity`) y filtros (`Filter`) deben utilizar siempre **`java.util.Date`** para mantener la compatibilidad con los serializadores.
+- **Frontend**: Los componentes `Calendar` de PrimeReact manejan objetos `Date` nativos de JavaScript, compatibles con el backend.
 
 ### 🆔 Gestión de IDs y Compatibilidad
-Para que el frontend genérico y el `BaseController` funcionen correctamente, cada entidad debe exponer un identificador bajo el nombre `id` en el JSON, independientemente de cómo se llame en la base de datos.
-
-- **Patrón de Alias (Ejemplo `Expediente.java`)**:
-  Si la clave primaria no se llama `id` (ej. es `referencia`), se deben implementar métodos de compatibilidad:
-  ```java
-  @Id
-  private String referencia; // PK real en DB
-  
-  // Métodos de compatibilidad para el genérico (Frontend/BaseController)
-  public String getId() { return referencia; }
-  public void setId(String id) { this.referencia = id; }
-  ```
-- **Tipado**: El tipo de ID en el `BaseController<T, ID, F>` debe coincidir con el tipo de la PK (ej. `Long` para `Animal`, `String` para `Expediente`).
-- **Autonuméricos**: Usar `@GeneratedValue(strategy = GenerationType.IDENTITY)` siempre que la lógica de negocio no requiera un ID manual (como ocurre en `Animal`).
-
-### 📅 Gestión de Fechas
-- **Backend**: Por convención del proyecto, todas las fechas en los modelos (`@Entity`) y filtros (`Filter`) deben utilizar siempre **`java.util.Date`**. Se debe evitar el uso de `LocalDate` o `LocalDateTime` para mantener la compatibilidad con los serializadores configurados.
-- **Frontend**: El componente `Calendar` de PrimeReact maneja objetos `Date` nativos de JavaScript, que son compatibles con `java.util.Date`.
+Cada entidad debe exponer un identificador bajo el nombre `id` en el JSON.
+- **Patrón de Alias**: Si la PK no se llama `id`, implementar `getId()` y `setId()` como alias.
+- **Tipado**: El tipo de ID en `BaseController<T, ID, F>` debe coincidir con el de la PK.
 
 ### 🛠️ Git y Línea de Comandos (PowerShell / Win32)
-En el entorno **win32**, se utiliza **PowerShell** para ejecutar comandos.
-- **NO USAR `&&`**: PowerShell (v5.1 y anteriores) no soporta el operador `&&`. Usar el separador de instrucciones `;` para encadenar comandos.
-- **Commit y Push**: Para asegurar que un comando solo se ejecuta si el anterior tuvo éxito, usar la lógica de PowerShell: `git add . ; if ($?) { git commit -m '...' } ; if ($?) { git push }`.
+En el entorno **win32**, se utiliza **PowerShell**.
+- **Chaining**: Usar `;` en lugar de `&&`.
+- **Commit Seguro**: `git add . ; if ($?) { git commit -m '...' } ; if ($?) { git push }`.
 
 ### 🗄️ Base de Datos y Persistencia
-- **H2 Database**: Los datos se guardan en `./data/x21aDB`. Si hay errores de esquema (ej. "column not found" tras un cambio en la entidad), borrar este archivo para que Hibernate regenere las tablas según el modelo actual.
-- **Mapeo Físico**: Si la base de datos exige un nombre de columna específico, usar `@Column(name = "NOMBRE_COL")`.
-- **Logs**: Nivel `DEBUG` para `com.ejie.x21a` para visualizar las queries y el filtrado genérico.
+- **H2 Database**: Los datos se guardan en `./data/x21aDB`. Borrar este archivo para regenerar tablas tras cambios en el modelo.
+- **Mapeo Físico**: Usar `@Column(name = "NOMBRE_COL")` si es necesario.
+- **Logs**: Nivel `DEBUG` para `com.ejie.x21a` para visualizar queries y filtrado genérico.
