@@ -68,6 +68,11 @@ Para que el frontend genérico y el `BaseController` funcionen correctamente, ca
 - **Backend**: Por convención del proyecto, todas las fechas en los modelos (`@Entity`) y filtros (`Filter`) deben utilizar siempre **`java.util.Date`**. Se debe evitar el uso de `LocalDate` o `LocalDateTime` para mantener la compatibilidad con los serializadores configurados.
 - **Frontend**: El componente `Calendar` de PrimeReact maneja objetos `Date` nativos de JavaScript, que son compatibles con `java.util.Date`.
 
+### 🛠️ Git y Línea de Comandos (PowerShell / Win32)
+En el entorno **win32**, se utiliza **PowerShell** para ejecutar comandos.
+- **NO USAR `&&`**: PowerShell (v5.1 y anteriores) no soporta el operador `&&`. Usar el separador de instrucciones `;` para encadenar comandos.
+- **Commit y Push**: Para asegurar que un comando solo se ejecuta si el anterior tuvo éxito, usar la lógica de PowerShell: `git add . ; if ($?) { git commit -m '...' } ; if ($?) { git push }`.
+
 ### 🗄️ Base de Datos y Persistencia
 - **H2 Database**: Los datos se guardan en `./data/x21aDB`. Si hay errores de esquema (ej. "column not found" tras un cambio en la entidad), borrar este archivo para que Hibernate regenere las tablas según el modelo actual.
 - **Mapeo Físico**: Si la base de datos exige un nombre de columna específico, usar `@Column(name = "NOMBRE_COL")`.
