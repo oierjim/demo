@@ -2,8 +2,7 @@ import api from '../api';
 
 export interface ComboElemento {
   id: string;
-  descripcionC: string;
-  descripcionE: string;
+  label: string;
 }
 
 const getProvincias = () => {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from './i18n/i18n';
 
 const api = axios.create({
   baseURL: '/x21a-api',
@@ -8,6 +9,12 @@ const api = axios.create({
   headers: {
     'X-Requested-With': 'XMLHttpRequest'
   }
+});
+
+// Interceptor para añadir el idioma en cada petición
+api.interceptors.request.use((config) => {
+  config.headers['Accept-Language'] = i18n.language || 'es';
+  return config;
 });
 
 // Interceptor para manejar errores de sesión de forma global

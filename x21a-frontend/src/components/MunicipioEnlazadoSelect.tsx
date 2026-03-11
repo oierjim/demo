@@ -33,21 +33,19 @@ export const MunicipioEnlazadoSelect: React.FC<MunicipioEnlazadoSelectProps> = (
     const [provincias, setProvincias] = useState<ComboElemento[]>([]);
     const [municipios, setMunicipios] = useState<ComboElemento[]>([]);
 
-    const getLabel = (item: ComboElemento) => i18n.language === 'eu' ? item.descripcionE : item.descripcionC;
-
-    // Cargar provincias una sola vez
+    // Cargar provincias cuando cambie el idioma o al montar
     useEffect(() => {
         comboService.getProvincias().then(setProvincias);
-    }, []);
+    }, [i18n.language]);
 
-    // Cargar municipios cuando cambie la provincia
+    // Cargar municipios cuando cambie la provincia o el idioma
     useEffect(() => {
         if (provinciaId) {
             comboService.getMunicipios(provinciaId).then(setMunicipios);
         } else {
             setMunicipios([]);
         }
-    }, [provinciaId]);
+    }, [provinciaId, i18n.language]);
 
     const labelClass = isFilter 
         ? "block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider" 
@@ -59,13 +57,13 @@ export const MunicipioEnlazadoSelect: React.FC<MunicipioEnlazadoSelectProps> = (
                 {showLabels && <label htmlFor="provincia" className={labelClass}>{t('domain:expediente.province')}</label>}
                 <Dropdown 
                     id="provincia"
-                    value={provinciaId} 
+                    value={provinciaId || undefined} 
                     options={provincias} 
-                    optionLabel={getLabel} 
+                    optionLabel="label" 
                     optionValue="id" 
                     onChange={(e) => {
                         onProvinciaChange(e.value);
-                        onMunicipioChange(undefined); // Reset municipio al cambiar provincia
+                        onMunicipioChange(undefined);
                     }} 
                     placeholder={t('common:actions.select')} 
                     emptyMessage={t('common:messages.noOptions')} 
@@ -80,9 +78,9 @@ export const MunicipioEnlazadoSelect: React.FC<MunicipioEnlazadoSelectProps> = (
                 {showLabels && <label htmlFor="municipio" className={labelClass}>{t('domain:expediente.municipality')}</label>}
                 <Dropdown 
                     id="municipio"
-                    value={municipioId} 
+                    value={municipioId || undefined} 
                     options={municipios} 
-                    optionLabel={getLabel} 
+                    optionLabel="label" 
                     optionValue="id" 
                     onChange={(e) => onMunicipioChange(e.value)} 
                     placeholder={t('common:actions.select')} 
