@@ -10,19 +10,27 @@ import { Button } from 'primereact/button';
 import { useTranslation } from 'react-i18next';
 import { DataTableTemplate } from '../components/DataTableTemplate';
 import { expedienteService } from '../services/expediente.service';
+import { MunicipioEnlazadoSelect } from '../components/MunicipioEnlazadoSelect';
 import type { Expediente } from '../services/expediente.service';
 
 interface ExpedienteFilters {
     referencia: string;
     estado: string | null;
+    provincia: string | null;
+    municipio: string | null;
     fechaAperturaDesde: Date | null;
     fechaAperturaHasta: Date | null;
 }
 
-const DEFAULT_FILTERS: ExpedienteFilters = { referencia: '', estado: null, fechaAperturaDesde: null, fechaAperturaHasta: null };
+const DEFAULT_FILTERS: ExpedienteFilters = { referencia: '', estado: null, provincia: null, municipio: null, fechaAperturaDesde: null, fechaAperturaHasta: null };
 
 const ExpedientePage: React.FC = () => {
     const { t, i18n } = useTranslation(['common', 'domain', 'pages', 'components']);
+
+    const getLocalizedLabel = (item?: { descripcionC: string; descripcionE: string }) => {
+        if (!item) return '';
+        return i18n.language === 'eu' ? item.descripcionE : item.descripcionC;
+    };
 
     const estados = useMemo(() => [
         { label: t('domain:status.open'), value: 'Abierto' },
@@ -30,6 +38,8 @@ const ExpedientePage: React.FC = () => {
         { label: t('domain:status.closed'), value: 'Cerrado' },
         { label: t('domain:status.inProcess'), value: 'En Proceso' }
     ], [t]);
+
+    const getId = (val: any) => (val && typeof val === 'object') ? val.id : val;
 
     const statusBodyTemplate = (rowData: Expediente) => {
         const severityMap: any = { 'Abierto': 'info', 'En Proceso': 'warning', 'Pendiente': 'secondary', 'Cerrado': 'success' };
@@ -101,6 +111,16 @@ const ExpedientePage: React.FC = () => {
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:expediente.status')}</label>
                         <Dropdown value={filters.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setFilters({...filters, estado: e.value})} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} />
                     </div>
+                    <div className="col-12 md:col-4">
+                        <MunicipioEnlazadoSelect 
+                            provinciaId={filters.provincia || undefined}
+                            municipioId={filters.municipio || undefined}
+                            onProvinciaChange={(id) => setFilters({...filters, provincia: id || null, municipio: null})}
+                            onMunicipioChange={(id) => setFilters({...filters, municipio: id || null})}
+                            isFilter={true}
+                            containerClass="grid"
+                        />
+                    </div>
                 </>
             )}
             dialogFields={(item, setItem, errors, isReadOnly) => (
@@ -125,6 +145,15 @@ const ExpedientePage: React.FC = () => {
                             <Calendar id="fechaCierre" value={item.fechaCierre instanceof Date ? item.fechaCierre : (item.fechaCierre ? new Date(item.fechaCierre) : null)} onChange={(e) => setItem({ ...item, fechaCierre: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                     </div>
+                    
+                    <MunicipioEnlazadoSelect 
+                        provinciaId={getId(item.provincia)}
+                        municipioId={getId(item.municipio)}
+                        onProvinciaChange={(id) => setItem({ ...item, provincia: id ? { id } as any : undefined, municipio: undefined })}
+                        onMunicipioChange={(id) => setItem({ ...item, municipio: id ? { id } as any : undefined })}
+                        isReadOnly={isReadOnly}
+                    />
+
                     <div className="field mb-4">
                         <label htmlFor="ultimoTramite" className="font-bold block mb-2">{t('domain:expediente.lastStep')}</label>
                         <InputText id="ultimoTramite" value={item.ultimoTramite || ''} onChange={(e) => setItem({ ...item, ultimoTramite: e.target.value })} disabled={isReadOnly} />
@@ -139,6 +168,8 @@ const ExpedientePage: React.FC = () => {
             <Column selectionMode="multiple" headerStyle={{ width: '3rem', backgroundColor: '#f8fafc' }}></Column>
             <Column field="referencia" header={t('domain:expediente.reference')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
             <Column field="solicitante" header={t('domain:expediente.applicant')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+            <Column field="provincia" header={t('domain:expediente.province')} body={(rowData: Expediente) => getLocalizedLabel(rowData.provincia)} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+            <Column field="municipio" header={t('domain:expediente.municipality')} body={(rowData: Expediente) => getLocalizedLabel(rowData.municipio)} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
             <Column field="fechaApertura" header={t('domain:expediente.dateOpen')} body={dateBodyTemplate} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
             <Column field="estado" header={t('domain:expediente.status')} body={statusBodyTemplate} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
         </DataTableTemplate>

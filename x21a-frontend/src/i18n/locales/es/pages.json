@@ -8,6 +8,10 @@
     "title": "Mantenimiento de Animales",
     "dialogTitle": "Detalle de Animal"
   },
+  "libros": {
+    "title": "Mantenimiento de Libros",
+    "dialogTitle": "Detalle de Libro"
+  },
   "series": {
     "title": "Mantenimiento de Series",
     "dialogTitle": "Detalle de la Serie"
@@ -42,6 +46,7 @@
     "maintenance_exp": "Expedientes",
     "maintenance_per": "Personas",
     "maintenance_ani": "Animales",
+    "maintenance_lib": "Libros",
     "maintenance_ser": "Series TV",
     "maintenance_pel": "Películas",
     "reports": "Reportes",

@@ -119,13 +119,28 @@ export function DataTableTemplate<T extends { id: any }, F>({
                 <h1 className="text-3xl font-bold m-0 text-slate-800 tracking-tight">{title}</h1>
             </div>
 
-            <Card className="mb-4 card">
+            <Card className="mb-4 card shadow-1">
                 <div className="grid align-items-end" onKeyDown={onFilterKeyDown}>
                     {filterFields(filters, setFilters)}
-                    <div className="col-12 md:col-3 flex gap-2">
-                        <Button label={t('common:actions.filter')} icon="pi pi-search" className="p-button-sm px-3" outlined onClick={handleApplyFilters} style={{ height: '39px', width: 'auto' }} />
-                        <Button label={t('common:actions.clean')} icon="pi pi-filter-slash" className="p-button-sm p-button-secondary px-3" outlined onClick={() => handleClearFilters(initialFilters)} style={{ height: '39px', width: 'auto' }} />
-                    </div>
+                </div>
+                
+                <div className="flex justify-content-end gap-2 mt-4 pt-3 border-top-1 border-slate-100">
+                    <Button 
+                        label={t('common:actions.filter')} 
+                        icon="pi pi-search" 
+                        className="p-button-sm px-4" 
+                        outlined 
+                        onClick={handleApplyFilters} 
+                        style={{ height: '39px', width: 'auto' }} 
+                    />
+                    <Button 
+                        label={t('common:actions.clean')} 
+                        icon="pi pi-filter-slash" 
+                        className="p-button-sm p-button-secondary px-4" 
+                        outlined 
+                        onClick={() => handleClearFilters(initialFilters)} 
+                        style={{ height: '39px', width: 'auto' }} 
+                    />
                 </div>
             </Card>
 
@@ -166,7 +181,6 @@ export function DataTableTemplate<T extends { id: any }, F>({
             <div className="p-datatable-container shadow-3 border-round-xl bg-white mb-8">
                 <DataTable 
                     {...({
-                        key: i18n.language,
                         ref: dt,
                         value: filteredData,
                         lazy: true,

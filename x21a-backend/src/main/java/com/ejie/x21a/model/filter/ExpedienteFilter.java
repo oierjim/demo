@@ -6,6 +6,8 @@ public class ExpedienteFilter {
     private String referencia;
     private String solicitante;
     private String estado;
+    private String provincia;
+    private String municipio;
     private Date fechaAperturaDesde;
     private Date fechaAperturaHasta;
 
@@ -16,6 +18,10 @@ public class ExpedienteFilter {
     public void setSolicitante(String solicitante) { this.solicitante = solicitante; }
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+    public String getProvincia() { return provincia; }
+    public void setProvincia(String provincia) { this.provincia = provincia; }
+    public String getMunicipio() { return municipio; }
+    public void setMunicipio(String municipio) { this.municipio = municipio; }
     public Date getFechaAperturaDesde() { return fechaAperturaDesde; }
     public void setFechaAperturaDesde(Date fechaAperturaDesde) { this.fechaAperturaDesde = fechaAperturaDesde; }
     public Date getFechaAperturaHasta() { return fechaAperturaHasta; }

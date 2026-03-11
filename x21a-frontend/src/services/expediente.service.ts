@@ -8,6 +8,16 @@ export interface Expediente {
     estado: string;
     fechaCierre?: Date | string;
     ultimoTramite?: string;
+    provincia?: {
+        id: string;
+        descripcionC: string;
+        descripcionE: string;
+    };
+    municipio?: {
+        id: string;
+        descripcionC: string;
+        descripcionE: string;
+    };
 }
 
 class ExpedienteService extends BaseService<Expediente> {

@@ -6,6 +6,8 @@
     "status": "Estado",
     "dateClose": "Fecha Cierre",
     "lastStep": "Último Trámite",
+    "province": "Provincia",
+    "municipality": "Municipio",
     "entity": "Expediente"
   },
   "persona": {
@@ -24,6 +26,14 @@
     "peso": "Peso (kg)",
     "altura": "Altura (cm)",
     "entity": "Animal"
+  },
+  "libro": {
+    "isbn": "ISBN",
+    "titulo": "Título",
+    "autor": "Autor",
+    "estrellas": "Estrellas",
+    "fechaPublicacion": "Fecha Publicación",
+    "entity": "Libro"
   },
   "serie": {
     "title": "Título",

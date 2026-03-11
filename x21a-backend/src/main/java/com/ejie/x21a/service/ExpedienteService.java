@@ -39,6 +39,12 @@ public class ExpedienteService extends BaseService<Expediente, String, Expedient
             if (filter.getFechaAperturaHasta() != null) {
                 predicates.add(cb.lessThanOrEqualTo(root.get("fechaApertura"), filter.getFechaAperturaHasta()));
             }
+            if (filter.getProvincia() != null && !filter.getProvincia().isEmpty()) {
+                predicates.add(cb.equal(root.get("provincia").get("id"), filter.getProvincia()));
+            }
+            if (filter.getMunicipio() != null && !filter.getMunicipio().isEmpty()) {
+                predicates.add(cb.equal(root.get("municipio").get("id"), filter.getMunicipio()));
+            }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }

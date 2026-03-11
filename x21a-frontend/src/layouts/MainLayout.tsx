@@ -83,6 +83,11 @@ const MainLayout: React.FC = () => {
               command: () => navigate('/animales')
             },
             {
+              label: t('pages:menu.maintenance_lib'),
+              icon: 'pi pi-book',
+              command: () => navigate('/libros')
+            },
+            {
               label: t('pages:menu.maintenance_ser'),
               icon: 'pi pi-video',
               command: () => navigate('/series')

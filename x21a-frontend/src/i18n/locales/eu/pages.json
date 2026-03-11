@@ -8,6 +8,10 @@
     "title": "Animalien Mantentzea",
     "dialogTitle": "Animaliaren Xehetasuna"
   },
+  "libros": {
+    "title": "Liburuen Mantentzea",
+    "dialogTitle": "Liburuaren Xehetasuna"
+  },
   "series": {
     "title": "Serieen Mantentzea",
     "dialogTitle": "Seriearen Xehetasuna"
@@ -42,6 +46,7 @@
     "maintenance_exp": "Espedienteak",
     "maintenance_per": "Pertsonak",
     "maintenance_ani": "Animaliak",
+    "maintenance_lib": "Liburuak",
     "maintenance_ser": "Telebista Sailak",
     "maintenance_pel": "Filmak",
     "reports": "Txostenak",

@@ -4,10 +4,12 @@
     "applicant": "Eskatzailea",
     "dateOpen": "Irekiera Data",
     "status": "Egoera",
-    "dateClose": "Itxiera Data",
+    "dateClose": "Itxitera Data",
     "lastStep": "Azken Tramitea",
+    "province": "Probintzia",
+    "municipality": "Udalerria",
     "entity": "Espedientea"
-  },
+    },
   "persona": {
     "dni": "NAN",
     "nombre": "Izena",
@@ -24,6 +26,14 @@
     "peso": "Pisua (kg)",
     "altura": "Altuera (cm)",
     "entity": "Animalia"
+  },
+  "libro": {
+    "isbn": "ISBN",
+    "titulo": "Izenburua",
+    "autor": "Egilea",
+    "estrellas": "Izarrak",
+    "fechaPublicacion": "Argitalpen Data",
+    "entity": "Liburua"
   },
   "serie": {
     "title": "Izenburua",
