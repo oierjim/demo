@@ -53,15 +53,15 @@ const LibroPage: React.FC = () => {
                 <>
                     <div className="col-12 md:col-3">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:libro.isbn')}</label>
-                        <InputText value={filters.isbn} onChange={(e) => setFilters({...filters, isbn: e.target.value})} placeholder="ISBN" className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        <InputText value={filters.isbn} onChange={(e) => setFilters(prev => ({...prev, isbn: e.target.value}))} placeholder="ISBN" className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
                     <div className="col-12 md:col-3">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:libro.titulo')}</label>
-                        <InputText value={filters.titulo} onChange={(e) => setFilters({...filters, titulo: e.target.value})} placeholder={t('domain:libro.titulo')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        <InputText value={filters.titulo} onChange={(e) => setFilters(prev => ({...prev, titulo: e.target.value}))} placeholder={t('domain:libro.titulo')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
                     <div className="col-12 md:col-3">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:libro.autor')}</label>
-                        <InputText value={filters.autor} onChange={(e) => setFilters({...filters, autor: e.target.value})} placeholder={t('domain:libro.autor')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        <InputText value={filters.autor} onChange={(e) => setFilters(prev => ({...prev, autor: e.target.value}))} placeholder={t('domain:libro.autor')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
                 </>
             )}
@@ -69,28 +69,28 @@ const LibroPage: React.FC = () => {
                 <>
                     <div className="field mb-4">
                         <label htmlFor="isbn" className="font-bold block mb-2">{t('domain:libro.isbn')}</label>
-                        <InputText id="isbn" value={item.isbn || ''} onChange={(e) => setItem({ ...item, isbn: e.target.value, id: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.isbn} />
+                        <InputText id="isbn" value={item.isbn || ''} onChange={(e) => setItem(prev => ({ ...prev, isbn: e.target.value, id: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.isbn} />
                         {errors.isbn && <small className="p-error">{errors.isbn}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:libro.titulo')}</label>
-                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem({ ...item, titulo: e.target.value })} required disabled={isReadOnly} invalid={!!errors.titulo} />
+                        <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem(prev => ({ ...prev, titulo: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.titulo} />
                         {errors.titulo && <small className="p-error">{errors.titulo}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="autor" className="font-bold block mb-2">{t('domain:libro.autor')}</label>
-                        <InputText id="autor" value={item.autor || ''} onChange={(e) => setItem({ ...item, autor: e.target.value })} required disabled={isReadOnly} invalid={!!errors.autor} />
+                        <InputText id="autor" value={item.autor || ''} onChange={(e) => setItem(prev => ({ ...prev, autor: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.autor} />
                         {errors.autor && <small className="p-error">{errors.autor}</small>}
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="fechaPub" className="font-bold block mb-2">{t('domain:libro.fechaPublicacion')}</label>
-                            <Calendar id="fechaPub" value={item.fechaPublicacion ? new Date(item.fechaPublicacion) : null} onChange={(e) => setItem({ ...item, fechaPublicacion: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
+                            <Calendar id="fechaPub" value={item.fechaPublicacion ? new Date(item.fechaPublicacion) : null} onChange={(e) => setItem(prev => ({ ...prev, fechaPublicacion: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field col-12 md:col-6">
                             <label htmlFor="estrellas" className="font-bold block mb-2">{t('domain:libro.estrellas')}</label>
                             <div className="flex align-items-center h-full" style={{ minHeight: '39px' }}>
-                                <Rating id="estrellas" value={item.estrellas} onChange={(e) => setItem({ ...item, estrellas: e.value || 0 })} cancel={false} disabled={isReadOnly} />
+                                <Rating id="estrellas" value={item.estrellas} onChange={(e) => setItem(prev => ({ ...prev, estrellas: e.value || 0 }))} cancel={false} disabled={isReadOnly} />
                             </div>
                         </div>
                     </div>

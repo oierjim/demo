@@ -62,8 +62,8 @@ export const MunicipioEnlazadoSelect: React.FC<MunicipioEnlazadoSelectProps> = (
                     optionLabel="label" 
                     optionValue="id" 
                     onChange={(e) => {
-                        onProvinciaChange(e.value);
-                        onMunicipioChange(undefined);
+                       onProvinciaChange(e.value);
+                       onMunicipioChange(undefined);
                     }} 
                     placeholder={t('common:actions.select')} 
                     emptyMessage={t('common:messages.noOptions')} 

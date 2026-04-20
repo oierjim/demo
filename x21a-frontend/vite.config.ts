@@ -5,10 +5,10 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: 'desarrollo.jakina.ejiedes.net',
+    host: 'localhost',
     proxy: {
       '/x21a-api': {
-        target: 'http://desarrollo.jakina.ejiedes.net:8080',
+        target: 'http://localhost:8080',
         changeOrigin: true,
         xfwd: true,
       }

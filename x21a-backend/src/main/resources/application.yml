@@ -19,10 +19,6 @@ spring:
     console:
       enabled: true
 
-# XLNetS Configuration (Ported from x21a.properties)
-xlnets:
-  path: https://xlnets.servicios.des.ejgv.euskalsarea.eus/n38a/N38LoginInicioServlet
-  inPortal: false
 
 # UDA Logs
 logging:

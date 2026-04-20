@@ -45,11 +45,11 @@ const AnimalPage: React.FC = () => {
                 <>
                     <div className="col-12 md:col-2">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.nombre')}</label>
-                        <InputText value={filters.nombre} onChange={(e) => setFilters({...filters, nombre: e.target.value})} placeholder={t('domain:animal.nombre')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        <InputText value={filters.nombre} onChange={(e) => setFilters(prev => ({...prev, nombre: e.target.value}))} placeholder={t('domain:animal.nombre')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
                     <div className="col-12 md:col-2">
                         <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.raza')}</label>
-                        <InputText value={filters.raza} onChange={(e) => setFilters({...filters, raza: e.target.value})} placeholder={t('domain:animal.raza')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        <InputText value={filters.raza} onChange={(e) => setFilters(prev => ({...prev, raza: e.target.value}))} placeholder={t('domain:animal.raza')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                     </div>
                 </>
             )}
@@ -57,26 +57,26 @@ const AnimalPage: React.FC = () => {
                 <>
                     <div className="field mb-4">
                         <label htmlFor="nombre" className="font-bold block mb-2">{t('domain:animal.nombre')}</label>
-                        <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem({ ...item, nombre: e.target.value })} required autoFocus disabled={isReadOnly} invalid={!!errors.nombre} />
+                        <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem(prev => ({ ...prev, nombre: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.nombre} />
                         {errors.nombre && <small className="p-error">{errors.nombre}</small>}
                     </div>
                     <div className="field mb-4">
                         <label htmlFor="raza" className="font-bold block mb-2">{t('domain:animal.raza')}</label>
-                        <InputText id="raza" value={item.raza || ''} onChange={(e) => setItem({ ...item, raza: e.target.value })} required disabled={isReadOnly} invalid={!!errors.raza} />
+                        <InputText id="raza" value={item.raza || ''} onChange={(e) => setItem(prev => ({ ...prev, raza: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.raza} />
                         {errors.raza && <small className="p-error">{errors.raza}</small>}
                     </div>
                     <div className="formgrid grid">
                         <div className="field col-12 md:col-6">
                             <label htmlFor="fechaNac" className="font-bold block mb-2">{t('domain:animal.fechaNacimiento')}</label>
-                            <Calendar id="fechaNac" value={item.fechaNacimiento instanceof Date ? item.fechaNacimiento : (item.fechaNacimiento ? new Date(item.fechaNacimiento) : null)} onChange={(e) => setItem({ ...item, fechaNacimiento: e.value as Date })} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
+                            <Calendar id="fechaNac" value={item.fechaNacimiento instanceof Date ? item.fechaNacimiento : (item.fechaNacimiento ? new Date(item.fechaNacimiento) : null)} onChange={(e) => setItem(prev => ({ ...prev, fechaNacimiento: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field col-6 md:col-3">
                             <label htmlFor="peso" className="font-bold block mb-2">{t('domain:animal.peso')}</label>
-                            <InputNumber id="peso" value={item.peso} onValueChange={(e) => setItem({ ...item, peso: e.value || 0 })} mode="decimal" minFractionDigits={1} maxFractionDigits={2} disabled={isReadOnly} />
+                            <InputNumber id="peso" value={item.peso} onValueChange={(e) => setItem(prev => ({ ...prev, peso: e.value || 0 }))} mode="decimal" minFractionDigits={1} maxFractionDigits={2} disabled={isReadOnly} />
                         </div>
                         <div className="field col-6 md:col-3">
                             <label htmlFor="altura" className="font-bold block mb-2">{t('domain:animal.altura')}</label>
-                            <InputNumber id="altura" value={item.altura} onValueChange={(e) => setItem({ ...item, altura: e.value || 0 })} mode="decimal" minFractionDigits={0} maxFractionDigits={1} disabled={isReadOnly} />
+                            <InputNumber id="altura" value={item.altura} onValueChange={(e) => setItem(prev => ({ ...prev, altura: e.value || 0 }))} mode="decimal" minFractionDigits={0} maxFractionDigits={1} disabled={isReadOnly} />
                         </div>
                     </div>
                 </>
