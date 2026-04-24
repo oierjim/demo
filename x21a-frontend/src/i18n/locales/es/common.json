@@ -25,7 +25,9 @@
     "deleted": "Eliminado correctamente",
     "updated": "Actualizado correctamente",
     "required": "Este campo es obligatorio",
-    "invalidFormat": "El formato no es válido"
+    "invalidFormat": "El formato no es válido",
+    "invalidDni": "El DNI no es válido (letra incorrecta)",
+    "invalidEmail": "El formato de email no es válido"
   },
   "labels": {
     "yes": "Sí, borrar",

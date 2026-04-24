@@ -25,7 +25,9 @@
     "deleted": "Zuzen ezabatu da",
     "updated": "Zuzen eguneratu da",
     "required": "Eremu hau derrigorrezkoa da",
-    "invalidFormat": "Formatua ez da baliozkoa"
+    "invalidFormat": "Formatua ez da baliozkoa",
+    "invalidDni": "NANa ez da baliozkoa (letra okerra)",
+    "invalidEmail": "Email formatua ez da baliozkoa"
   },
   "labels": {
     "yes": "Bai, ezabatu",

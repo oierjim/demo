@@ -1,9 +1,24 @@
 import { z } from 'zod';
 
-// --- Esquemas Base ---
+// --- Claves i18n ---
 const requiredMsg = 'common:messages.required';
+const invalidFormatMsg = 'common:messages.invalidFormat';
+const invalidDniMsg = 'common:messages.invalidDni';
+const invalidEmailMsg = 'common:messages.invalidEmail';
 
-// --- Animal ---
+// --- Validación Real DNI (Algoritmo Módulo 23) ---
+const validateDNI = (dni: string) => {
+    const match = dni.match(/^(\d{8})([A-Z])$/);
+    if (!match) return false;
+
+    const [ , num, letter] = match;
+    const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+    const calculatedLetter = letters[parseInt(num, 10) % 23];
+    
+    return letter === calculatedLetter;
+};
+
+// --- Esquema Animal ---
 export const AnimalSchema = z.object({
     nombre: z.string().min(1, requiredMsg),
     raza: z.string().min(1, requiredMsg),
@@ -12,7 +27,7 @@ export const AnimalSchema = z.object({
     fechaNacimiento: z.any()
 });
 
-// --- Expediente ---
+// --- Esquema Expediente ---
 export const ExpedienteSchema = z.object({
     referencia: z.string().min(1, requiredMsg),
     solicitante: z.string().min(1, requiredMsg),
@@ -24,36 +39,39 @@ export const ExpedienteSchema = z.object({
     fechaCierre: z.any().optional()
 });
 
-// --- Libro ---
+// --- Esquema Libro ---
 export const LibroSchema = z.object({
     isbn: z.string().min(1, requiredMsg),
     titulo: z.string().min(1, requiredMsg),
     autor: z.string().min(1, requiredMsg),
-    estrellas: z.number().min(1).max(5),
+    estrellas: z.number().min(1, requiredMsg).max(5, invalidFormatMsg),
     fechaPublicacion: z.any().optional()
 });
 
-// --- Pelicula ---
+// --- Esquema Pelicula ---
 export const PeliculaSchema = z.object({
     titulo: z.string().min(1, requiredMsg),
     director: z.string().min(1, requiredMsg),
     genero: z.string().optional(),
-    duracion: z.number().min(1).optional(),
+    duracion: z.number().min(1, requiredMsg).optional(),
     oscar: z.boolean().optional(),
     fechaEstreno: z.any().optional()
 });
 
-// --- Persona ---
+// --- Esquema Persona ---
 export const PersonaSchema = z.object({
-    dni: z.string().min(1, requiredMsg).regex(/^[0-9]{8}[A-Z]$/, 'Formato inválido (12345678X)'),
+    dni: z.string()
+        .min(1, requiredMsg)
+        .regex(/^[0-9]{8}[A-Z]$/, invalidFormatMsg)
+        .refine(validateDNI, { message: invalidDniMsg }),
     nombre: z.string().min(1, requiredMsg),
     apellido1: z.string().min(1, requiredMsg),
     apellido2: z.string().optional(),
-    email: z.string().min(1, requiredMsg).email('Email inválido'),
+    email: z.string().min(1, requiredMsg).email(invalidEmailMsg),
     fechaNacimiento: z.any().optional()
 });
 
-// --- Serie ---
+// --- Esquema Serie ---
 export const SerieSchema = z.object({
     titulo: z.string().min(1, requiredMsg),
     tipo: z.string().optional(),
