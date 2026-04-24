@@ -4,7 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
 import { useTranslation } from 'react-i18next';
-import { DataTableTemplate } from '../components/DataTableTemplate';
+import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { animalService } from '../services/animal.service';
 import type { Animal } from '../services/animal.service';
 
@@ -34,62 +34,74 @@ const AnimalPage: React.FC = () => {
     };
 
     return (
-        <DataTableTemplate<Animal, AnimalFilters>
-            title={t('pages:animales.title')}
+        <DataTableMaintenance<Animal, AnimalFilters>
             entityKey="animales"
             service={animalService}
             initialFilters={DEFAULT_FILTERS}
-            newItemDefault={{ nombre: '', raza: '', peso: 0, altura: 0, fechaNacimiento: new Date() }}
             validate={validate}
-            filterFields={(filters, setFilters) => (
-                <>
-                    <div className="col-12 md:col-2">
-                        <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.nombre')}</label>
-                        <InputText value={filters.nombre} onChange={(e) => setFilters(prev => ({...prev, nombre: e.target.value}))} placeholder={t('domain:animal.nombre')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
-                    </div>
-                    <div className="col-12 md:col-2">
-                        <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.raza')}</label>
-                        <InputText value={filters.raza} onChange={(e) => setFilters(prev => ({...prev, raza: e.target.value}))} placeholder={t('domain:animal.raza')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
-                    </div>
-                </>
-            )}
-            dialogFields={(item, setItem, errors, isReadOnly) => (
-                <>
-                    <div className="field mb-4">
-                        <label htmlFor="nombre" className="font-bold block mb-2">{t('domain:animal.nombre')}</label>
-                        <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem(prev => ({ ...prev, nombre: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.nombre} />
-                        {errors.nombre && <small className="p-error">{errors.nombre}</small>}
-                    </div>
-                    <div className="field mb-4">
-                        <label htmlFor="raza" className="font-bold block mb-2">{t('domain:animal.raza')}</label>
-                        <InputText id="raza" value={item.raza || ''} onChange={(e) => setItem(prev => ({ ...prev, raza: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.raza} />
-                        {errors.raza && <small className="p-error">{errors.raza}</small>}
-                    </div>
-                    <div className="formgrid grid">
-                        <div className="field col-12 md:col-6">
-                            <label htmlFor="fechaNac" className="font-bold block mb-2">{t('domain:animal.fechaNacimiento')}</label>
-                            <Calendar id="fechaNac" value={item.fechaNacimiento instanceof Date ? item.fechaNacimiento : (item.fechaNacimiento ? new Date(item.fechaNacimiento) : null)} onChange={(e) => setItem(prev => ({ ...prev, fechaNacimiento: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
-                        </div>
-                        <div className="field col-6 md:col-3">
-                            <label htmlFor="peso" className="font-bold block mb-2">{t('domain:animal.peso')}</label>
-                            <InputNumber id="peso" value={item.peso} onValueChange={(e) => setItem(prev => ({ ...prev, peso: e.value || 0 }))} mode="decimal" minFractionDigits={1} maxFractionDigits={2} disabled={isReadOnly} />
-                        </div>
-                        <div className="field col-6 md:col-3">
-                            <label htmlFor="altura" className="font-bold block mb-2">{t('domain:animal.altura')}</label>
-                            <InputNumber id="altura" value={item.altura} onValueChange={(e) => setItem(prev => ({ ...prev, altura: e.value || 0 }))} mode="decimal" minFractionDigits={0} maxFractionDigits={1} disabled={isReadOnly} />
-                        </div>
-                    </div>
-                </>
-            )}
-            dialogWidth="500px"
         >
-            <Column selectionMode="multiple" headerStyle={{ width: '3rem', backgroundColor: '#f8fafc' }}></Column>
-            <Column field="nombre" header={t('domain:animal.nombre')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
-            <Column field="raza" header={t('domain:animal.raza')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
-            <Column field="fechaNacimiento" header={t('domain:animal.fechaNacimiento')} body={dateBodyTemplate} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
-            <Column field="peso" header={t('domain:animal.peso')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
-            <Column field="altura" header={t('domain:animal.altura')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
-        </DataTableTemplate>
+            <DataTableMaintenance.Title title={t('pages:animales.title')} />
+
+            <DataTableMaintenance.Filters>
+                {(filters, setFilters) => (
+                    <>
+                        <div className="col-12 md:col-2">
+                            <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.nombre')}</label>
+                            <InputText value={filters.nombre} onChange={(e) => setFilters(prev => ({...prev, nombre: e.target.value}))} placeholder={t('domain:animal.nombre')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        </div>
+                        <div className="col-12 md:col-2">
+                            <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:animal.raza')}</label>
+                            <InputText value={filters.raza} onChange={(e) => setFilters(prev => ({...prev, raza: e.target.value}))} placeholder={t('domain:animal.raza')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                        </div>
+                    </>
+                )}
+            </DataTableMaintenance.Filters>
+
+            <DataTableMaintenance.Toolbar 
+                showExport 
+                newItemDefault={{ nombre: '', raza: '', peso: 0, altura: 0, fechaNacimiento: new Date() }} 
+            />
+
+            <DataTableMaintenance.Table selectionMode="multiple">
+                <Column selectionMode="multiple" headerStyle={{ width: '3rem', backgroundColor: '#f8fafc' }}></Column>
+                <Column field="nombre" header={t('domain:animal.nombre')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+                <Column field="raza" header={t('domain:animal.raza')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+                <Column field="fechaNacimiento" header={t('domain:animal.fechaNacimiento')} body={dateBodyTemplate} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+                <Column field="peso" header={t('domain:animal.peso')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+                <Column field="altura" header={t('domain:animal.altura')} sortable headerStyle={{ backgroundColor: '#f8fafc' }} />
+            </DataTableMaintenance.Table>
+
+            <DataTableMaintenance.Dialog width="500px">
+                {(item, setItem, errors, isReadOnly) => (
+                    <>
+                        <div className="field mb-4">
+                            <label htmlFor="nombre" className="font-bold block mb-2">{t('domain:animal.nombre')}</label>
+                            <InputText id="nombre" value={item.nombre || ''} onChange={(e) => setItem(prev => ({ ...prev, nombre: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.nombre} />
+                            {errors.nombre && <small className="p-error">{errors.nombre}</small>}
+                        </div>
+                        <div className="field mb-4">
+                            <label htmlFor="raza" className="font-bold block mb-2">{t('domain:animal.raza')}</label>
+                            <InputText id="raza" value={item.raza || ''} onChange={(e) => setItem(prev => ({ ...prev, raza: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.raza} />
+                            {errors.raza && <small className="p-error">{errors.raza}</small>}
+                        </div>
+                        <div className="formgrid grid">
+                            <div className="field col-12 md:col-6">
+                                <label htmlFor="fechaNac" className="font-bold block mb-2">{t('domain:animal.fechaNacimiento')}</label>
+                                <Calendar id="fechaNac" value={item.fechaNacimiento instanceof Date ? item.fechaNacimiento : (item.fechaNacimiento ? new Date(item.fechaNacimiento) : null)} onChange={(e) => setItem(prev => ({ ...prev, fechaNacimiento: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
+                            </div>
+                            <div className="field col-6 md:col-3">
+                                <label htmlFor="peso" className="font-bold block mb-2">{t('domain:animal.peso')}</label>
+                                <InputNumber id="peso" value={item.peso} onValueChange={(e) => setItem(prev => ({ ...prev, peso: e.value || 0 }))} mode="decimal" minFractionDigits={1} maxFractionDigits={2} disabled={isReadOnly} />
+                            </div>
+                            <div className="field col-6 md:col-3">
+                                <label htmlFor="altura" className="font-bold block mb-2">{t('domain:animal.altura')}</label>
+                                <InputNumber id="altura" value={item.altura} onValueChange={(e) => setItem(prev => ({ ...prev, altura: e.value || 0 }))} mode="decimal" minFractionDigits={0} maxFractionDigits={1} disabled={isReadOnly} />
+                            </div>
+                        </div>
+                    </>
+                )}
+            </DataTableMaintenance.Dialog>
+        </DataTableMaintenance>
     );
 };
 
