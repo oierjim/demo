@@ -11,7 +11,7 @@ import { useMaintenance } from '../hooks/useMaintenance';
 import { BaseService } from '../services/base.service';
 
 // --- TYPES ---
-interface MaintenanceContextProps<T, F> {
+export interface MaintenanceContextProps<T, F> {
     filteredData: T[];
     totalRecords: number;
     selectedItems: T[];
@@ -50,7 +50,6 @@ interface MaintenanceContextProps<T, F> {
     t: any;
 }
 
-// --- CONTEXT ---
 const MaintenanceContext = createContext<MaintenanceContextProps<any, any> | null>(null);
 
 export const useMaintenanceContext = <T, F>() => {
@@ -59,24 +58,54 @@ export const useMaintenanceContext = <T, F>() => {
     return context as MaintenanceContextProps<T, F>;
 };
 
-interface DataTableMaintenanceProps<T, F> {
-    entityKey: string;
-    service: BaseService<T>;
-    initialFilters: F;
-    validate?: (item: Partial<T>) => Record<string, string>;
-    onSuccess?: (msg: string) => void;
-    onError?: (msg: string) => void;
-    children: ReactNode;
+// --- COMPONENT INTERFACES ---
+interface TitleProps {
+    title: string;
 }
 
-// --- MAIN COMPONENT (ROOT) ---
+interface FiltersProps<F> {
+    children: (filters: F, setFilters: React.Dispatch<React.SetStateAction<F>>) => ReactNode;
+}
+
+interface ToolbarProps<T> {
+    showNew?: boolean;
+    showEdit?: boolean;
+    showDelete?: boolean;
+    showExport?: boolean;
+    readOnly?: boolean;
+    newItemDefault?: Partial<T>;
+    extraButtons?: (selectedItems: T[]) => ReactNode;
+    entityNameKey?: string;
+}
+
+interface TableProps {
+    children: ReactNode;
+    selectionMode?: 'single' | 'multiple' | 'none';
+    dataKey?: string;
+}
+
+interface MaintenanceDialogProps<T> {
+    title?: string;
+    width?: string;
+    readOnly?: boolean;
+    children: (item: Partial<T>, setItem: React.Dispatch<React.SetStateAction<Partial<T>>>, errors: Record<string, string>, isReadOnly: boolean) => ReactNode;
+    entityNameKey?: string;
+}
+
+// --- MAIN COMPONENT ---
 export function DataTableMaintenance<T extends { id: any }, F>({
     entityKey,
     service,
     initialFilters,
     validate,
     children
-}: DataTableMaintenanceProps<T, F>) {
+}: {
+    entityKey: string;
+    service: BaseService<T>;
+    initialFilters: F;
+    validate?: (item: Partial<T>) => Record<string, string>;
+    children: ReactNode;
+}) {
     const { t } = useTranslation(['common', 'pages', 'components', 'domain']);
     const toast = useRef<Toast>(null);
     
@@ -100,17 +129,15 @@ export function DataTableMaintenance<T extends { id: any }, F>({
     );
 }
 
-// --- SUB-COMPONENTS ---
+// --- SUB-COMPONENTS IMPLEMENTATION ---
 
-// 1. TITLE
-DataTableMaintenance.Title = ({ title }: { title: string }) => (
+const Title: React.FC<TitleProps> = ({ title }) => (
     <div className="flex align-items-center justify-content-between mb-4">
         <h1 className="text-3xl font-bold m-0 text-slate-800 tracking-tight">{title}</h1>
     </div>
 );
 
-// 2. FILTERS
-DataTableMaintenance.Filters = <F,>({ children }: { children: (filters: F, setFilters: React.Dispatch<React.SetStateAction<F>>) => ReactNode }) => {
+const Filters = <F,>({ children }: FiltersProps<F>) => {
     const { filters, setFilters, handleApplyFilters, handleClearFilters, initialFilters, t } = useMaintenanceContext<any, F>();
     
     const onFilterKeyDown = (e: React.KeyboardEvent) => {
@@ -130,19 +157,7 @@ DataTableMaintenance.Filters = <F,>({ children }: { children: (filters: F, setFi
     );
 };
 
-// 3. TOOLBAR
-interface ToolbarProps<T> {
-    showNew?: boolean;
-    showEdit?: boolean;
-    showDelete?: boolean;
-    showExport?: boolean;
-    readOnly?: boolean;
-    newItemDefault?: Partial<T>;
-    extraButtons?: (selectedItems: T[]) => ReactNode;
-    entityNameKey?: string;
-}
-
-DataTableMaintenance.Toolbar = <T,>({ 
+const MaintenanceToolbar = <T,>({ 
     showNew = true, showEdit = true, showDelete = true, showExport = true, 
     readOnly = false, newItemDefault = {}, extraButtons, entityNameKey 
 }: ToolbarProps<T>) => {
@@ -158,8 +173,6 @@ DataTableMaintenance.Toolbar = <T,>({
             accept: deleteSelected
         });
     }, [t, deleteSelected]);
-
-    const domainKey = entityNameKey || entityKey;
 
     return (
         <Toolbar className="mb-4 bg-transparent border-none p-0" left={
@@ -177,19 +190,12 @@ DataTableMaintenance.Toolbar = <T,>({
     );
 };
 
-// 4. TABLE
-interface TableProps {
-    children: ReactNode;
-    selectionMode?: 'single' | 'multiple' | 'none';
-    dataKey?: string;
-}
-
-DataTableMaintenance.Table = <T,>({ children, selectionMode = 'multiple', dataKey = 'id' }: TableProps) => {
+const Table: React.FC<TableProps> = ({ children, selectionMode = 'multiple', dataKey = 'id' }) => {
     const { 
         filteredData, totalRecords, selectedItems, selectAllPages, deselectedItems, 
         onSelectionChange, handleSelectAllPages, handleClearSelection, 
         isLoading, page, rows, sortField, sortOrder, onPage, onSort, t 
-    } = useMaintenanceContext<T, any>();
+    } = useMaintenanceContext<any, any>();
     
     const dt = useRef<any>(null);
 
@@ -254,16 +260,7 @@ DataTableMaintenance.Table = <T,>({ children, selectionMode = 'multiple', dataKe
     );
 };
 
-// 5. DIALOG
-interface DialogProps<T> {
-    title?: string;
-    width?: string;
-    readOnly?: boolean;
-    children: (item: Partial<T>, setItem: React.Dispatch<React.SetStateAction<Partial<T>>>, errors: Record<string, string>, isReadOnly: boolean) => ReactNode;
-    entityNameKey?: string;
-}
-
-DataTableMaintenance.Dialog = <T,>({ title, width = '450px', readOnly = false, children, entityNameKey }: DialogProps<T>) => {
+const MaintenanceDialog = <T,>({ title, width = '450px', readOnly = false, children, entityNameKey }: MaintenanceDialogProps<T>) => {
     const { itemDialog, isEdit, item, setItem, errors, closeDialog, saveItem, isSaving, entityKey, t } = useMaintenanceContext<T, any>();
     
     const isDetailMode = readOnly && isEdit;
@@ -285,3 +282,10 @@ DataTableMaintenance.Dialog = <T,>({ title, width = '450px', readOnly = false, c
         </Dialog>
     );
 };
+
+// --- ATTACH SUB-COMPONENTS ---
+DataTableMaintenance.Title = Title;
+DataTableMaintenance.Filters = Filters;
+DataTableMaintenance.Toolbar = MaintenanceToolbar;
+DataTableMaintenance.Table = Table;
+DataTableMaintenance.Dialog = MaintenanceDialog;
