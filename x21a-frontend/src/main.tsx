@@ -1,17 +1,22 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import ExpedientePage from './pages/ExpedientePage'
-import PersonaPage from './pages/PersonaPage'
-import AnimalPage from './pages/AnimalPage'
-import LibroPage from './pages/LibroPage'
-import SeriesPage from './pages/SeriesPage'
-import PeliculaPage from './pages/PeliculaPage'
+import { ProgressBar } from 'primereact/progressbar';
+
+// Layouts and Base Components
 import MainLayout from './layouts/MainLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import RoleProtectedRoute from './components/RoleProtectedRoute'
+
+// Lazy Loading for Pages
+const HomePage = lazy(() => import('./pages/HomePage'));
+const ExpedientePage = lazy(() => import('./pages/ExpedientePage'));
+const PersonaPage = lazy(() => import('./pages/PersonaPage'));
+const AnimalPage = lazy(() => import('./pages/AnimalPage'));
+const LibroPage = lazy(() => import('./pages/LibroPage'));
+const SeriesPage = lazy(() => import('./pages/SeriesPage'));
+const PeliculaPage = lazy(() => import('./pages/PeliculaPage'));
 
 // PrimeReact Styles
 import "primereact/resources/themes/lara-light-blue/theme.css";
@@ -58,49 +63,58 @@ const queryClient = new QueryClient({
   },
 })
 
+const LoadingFallback = () => (
+  <div className="w-full h-screen flex flex-column justify-content-center align-items-center p-8">
+    <ProgressBar mode="indeterminate" style={{ height: '6px', width: '300px' }} />
+    <span className="mt-4 text-slate-500 font-medium">Cargando aplicación...</span>
+  </div>
+);
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          }>
-            <Route index element={<HomePage />} />
-            <Route path="expedientes" element={
-              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
-                <ExpedientePage /> 
-              </RoleProtectedRoute>
-            } />
-            <Route path="personas" element={
-              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
-                <PersonaPage /> 
-              </RoleProtectedRoute>
-            } />
-            <Route path="animales" element={
-              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
-                <AnimalPage /> 
-              </RoleProtectedRoute>
-            } />
-            <Route path="libros" element={
-              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
-                <LibroPage /> 
-              </RoleProtectedRoute>
-            } />
-            <Route path="series" element={
-              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
-                <SeriesPage /> 
-              </RoleProtectedRoute>
-            } />
-            <Route path="peliculas" element={
-              <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
-                <PeliculaPage /> 
-              </RoleProtectedRoute>
-            } />
-          </Route>
-        </Routes>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            }>
+              <Route index element={<HomePage />} />
+              <Route path="expedientes" element={
+                <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                  <ExpedientePage /> 
+                </RoleProtectedRoute>
+              } />
+              <Route path="personas" element={
+                <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                  <PersonaPage /> 
+                </RoleProtectedRoute>
+              } />
+              <Route path="animales" element={
+                <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                  <AnimalPage /> 
+                </RoleProtectedRoute>
+              } />
+              <Route path="libros" element={
+                <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                  <LibroPage /> 
+                </RoleProtectedRoute>
+              } />
+              <Route path="series" element={
+                <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                  <SeriesPage /> 
+                </RoleProtectedRoute>
+              } />
+              <Route path="peliculas" element={
+                <RoleProtectedRoute allowedRoles={["AB10B-IN-0001"]}>
+                  <PeliculaPage /> 
+                </RoleProtectedRoute>
+              } />
+            </Route>
+          </Routes>
+        </Suspense>
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>,

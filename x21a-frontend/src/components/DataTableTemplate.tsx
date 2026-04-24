@@ -16,8 +16,8 @@ interface DataTableTemplateProps<T, F> {
     service: BaseService<T>;
     initialFilters: F;
     newItemDefault: Partial<T>;
-    filterFields: (filters: F, setFilters: (f: F | ((prev: F) => F)) => void) => React.ReactNode;
-    dialogFields: (item: Partial<T>, setItem: (i: Partial<T> | ((prev: Partial<T>) => Partial<T>)) => void, errors: Record<string, string>, isReadOnly?: boolean) => React.ReactNode;
+    filterFields: (filters: F, setFilters: React.Dispatch<React.SetStateAction<F>>) => React.ReactNode;
+    dialogFields: (item: Partial<T>, setItem: React.Dispatch<React.SetStateAction<Partial<T>>>, errors: Record<string, string>, isReadOnly?: boolean) => React.ReactNode;
     dialogWidth?: string;
     children: React.ReactNode;
     
