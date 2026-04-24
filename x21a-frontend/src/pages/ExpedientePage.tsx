@@ -69,7 +69,7 @@ const ExpedientePage: React.FC = () => {
             initialFilters={DEFAULT_FILTERS}
             validate={validate}
         >
-            <DataTableMaintenance.Title title={t('pages:maintenance.title')} />
+            <DataTableMaintenance.Title title={t('pages:expedientes.title')} />
 
             <DataTableMaintenance.Filters>
                 {(filters, setFilters) => (

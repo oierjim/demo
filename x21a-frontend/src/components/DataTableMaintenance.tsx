@@ -10,16 +10,55 @@ import { useTranslation } from 'react-i18next';
 import { useMaintenance } from '../hooks/useMaintenance';
 import { BaseService } from '../services/base.service';
 
-// --- CONTEXT ---
-const MaintenanceContext = createContext<any>(null);
+// --- TYPES ---
+interface MaintenanceContextProps<T, F> {
+    filteredData: T[];
+    totalRecords: number;
+    selectedItems: T[];
+    setSelectedItems: React.Dispatch<React.SetStateAction<T[]>>;
+    selectAllPages: boolean;
+    deselectedItems: T[];
+    onSelectionChange: (e: any) => void;
+    handleSelectAllPages: () => void;
+    handleClearSelection: () => void;
+    isLoading: boolean;
+    isError: boolean;
+    itemDialog: boolean;
+    isEdit: boolean;
+    item: Partial<T>;
+    setItem: React.Dispatch<React.SetStateAction<Partial<T>>>;
+    errors: Record<string, string>;
+    setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+    filters: F;
+    setFilters: React.Dispatch<React.SetStateAction<F>>;
+    page: number;
+    rows: number;
+    sortField: string | null;
+    sortOrder: number | null;
+    onPage: (event: any) => void;
+    onSort: (event: any) => void;
+    handleApplyFilters: () => void;
+    handleClearFilters: (defaults: F) => void;
+    openNew: (initialState?: Partial<T>) => void;
+    openEdit: (selectedItem: T) => void;
+    closeDialog: () => void;
+    saveItem: () => void;
+    deleteSelected: () => void;
+    isSaving: boolean;
+    entityKey: string;
+    initialFilters: F;
+    t: any;
+}
 
-export const useMaintenanceContext = () => {
+// --- CONTEXT ---
+const MaintenanceContext = createContext<MaintenanceContextProps<any, any> | null>(null);
+
+export const useMaintenanceContext = <T, F>() => {
     const context = useContext(MaintenanceContext);
     if (!context) throw new Error('useMaintenanceContext must be used within a DataTableMaintenance');
-    return context;
+    return context as MaintenanceContextProps<T, F>;
 };
 
-// --- TYPES ---
 interface DataTableMaintenanceProps<T, F> {
     entityKey: string;
     service: BaseService<T>;
@@ -38,7 +77,7 @@ export function DataTableMaintenance<T extends { id: any }, F>({
     validate,
     children
 }: DataTableMaintenanceProps<T, F>) {
-    const { t } = useTranslation(['common']);
+    const { t } = useTranslation(['common', 'pages', 'components', 'domain']);
     const toast = useRef<Toast>(null);
     
     const maintenance = useMaintenance<T, F>({
@@ -72,7 +111,7 @@ DataTableMaintenance.Title = ({ title }: { title: string }) => (
 
 // 2. FILTERS
 DataTableMaintenance.Filters = <F,>({ children }: { children: (filters: F, setFilters: React.Dispatch<React.SetStateAction<F>>) => ReactNode }) => {
-    const { filters, setFilters, handleApplyFilters, handleClearFilters, initialFilters, t } = useMaintenanceContext();
+    const { filters, setFilters, handleApplyFilters, handleClearFilters, initialFilters, t } = useMaintenanceContext<any, F>();
     
     const onFilterKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') handleApplyFilters();
@@ -107,8 +146,7 @@ DataTableMaintenance.Toolbar = <T,>({
     showNew = true, showEdit = true, showDelete = true, showExport = true, 
     readOnly = false, newItemDefault = {}, extraButtons, entityNameKey 
 }: ToolbarProps<T>) => {
-    const { selectedItems, selectAllPages, openNew, openEdit, deleteSelected, entityKey, t } = useMaintenanceContext();
-    const dt = useRef<any>(null); // Note: This needs to be coordinated if export is used
+    const { selectedItems, selectAllPages, openNew, openEdit, deleteSelected, entityKey, t } = useMaintenanceContext<T, any>();
 
     const confirmDelete = useCallback(() => {
         confirmDialog({
@@ -133,7 +171,6 @@ DataTableMaintenance.Toolbar = <T,>({
             </div>
         } right={
             showExport ? <Button label={t('common:actions.export')} icon="pi pi-upload" severity="secondary" onClick={() => {
-                // Dispatch a custom event or use a shared ref if needed for export
                 window.dispatchEvent(new CustomEvent('maintenance-export'));
             }} text /> : null
         } />
@@ -152,11 +189,10 @@ DataTableMaintenance.Table = <T,>({ children, selectionMode = 'multiple', dataKe
         filteredData, totalRecords, selectedItems, selectAllPages, deselectedItems, 
         onSelectionChange, handleSelectAllPages, handleClearSelection, 
         isLoading, page, rows, sortField, sortOrder, onPage, onSort, t 
-    } = useMaintenanceContext();
+    } = useMaintenanceContext<T, any>();
     
     const dt = useRef<any>(null);
 
-    // Escuchar evento de exportación
     React.useEffect(() => {
         const handleExport = () => dt.current?.exportCSV();
         window.addEventListener('maintenance-export', handleExport);
@@ -228,7 +264,7 @@ interface DialogProps<T> {
 }
 
 DataTableMaintenance.Dialog = <T,>({ title, width = '450px', readOnly = false, children, entityNameKey }: DialogProps<T>) => {
-    const { itemDialog, isEdit, item, setItem, errors, closeDialog, saveItem, isSaving, entityKey, t } = useMaintenanceContext();
+    const { itemDialog, isEdit, item, setItem, errors, closeDialog, saveItem, isSaving, entityKey, t } = useMaintenanceContext<T, any>();
     
     const isDetailMode = readOnly && isEdit;
     const actionLabel = isDetailMode ? t('common:actions.detail') : (isEdit ? t('common:actions.edit') : t('common:actions.new'));
