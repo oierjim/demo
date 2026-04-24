@@ -9,6 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { serieService } from '../services/serie.service';
 import type { Serie } from '../services/serie.service';
+import { SerieSchema } from '../util/schemas';
+import { formatZodErrors } from '../util/validation';
 
 interface SerieFilters {
     titulo: string;
@@ -64,10 +66,9 @@ const SeriesPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
-    const validate = (item: Partial<Serie>) => {
-        const errors: Record<string, string> = {};
-        if (!item.titulo) errors.titulo = t('common:messages.required');
-        return errors;
+    const validate = (item: any) => {
+        const result = SerieSchema.safeParse(item);
+        return result.success ? {} : formatZodErrors(result.error);
     };
 
     return (

@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { animalService } from '../services/animal.service';
 import type { Animal } from '../services/animal.service';
+import { AnimalSchema } from '../util/schemas';
+import { formatZodErrors } from '../util/validation';
 
 interface AnimalFilters {
     nombre: string;
@@ -26,11 +28,9 @@ const AnimalPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
-    const validate = (item: Partial<Animal>) => {
-        const errors: Record<string, string> = {};
-        if (!item.nombre) errors.nombre = t('common:messages.required');
-        if (!item.raza) errors.raza = t('common:messages.required');
-        return errors;
+    const validate = (item: any) => {
+        const result = AnimalSchema.safeParse(item);
+        return result.success ? {} : formatZodErrors(result.error);
     };
 
     return (

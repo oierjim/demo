@@ -12,6 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { peliculaService } from '../services/pelicula.service';
 import type { Pelicula } from '../services/pelicula.service';
+import { PeliculaSchema } from '../util/schemas';
+import { formatZodErrors } from '../util/validation';
 
 interface PeliculaFilters {
     titulo: string;
@@ -51,11 +53,9 @@ const PeliculaPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
-    const validate = (item: Partial<Pelicula>) => {
-        const errors: Record<string, string> = {};
-        if (!item.titulo) errors.titulo = t('common:messages.required');
-        if (!item.director) errors.director = t('common:messages.required');
-        return errors;
+    const validate = (item: any) => {
+        const result = PeliculaSchema.safeParse(item);
+        return result.success ? {} : formatZodErrors(result.error);
     };
 
     return (

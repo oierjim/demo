@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { libroService } from '../services/libro.service';
 import type { Libro } from '../services/libro.service';
+import { LibroSchema } from '../util/schemas';
+import { formatZodErrors } from '../util/validation';
 
 interface LibroFilters {
     isbn: string;
@@ -32,12 +34,9 @@ const LibroPage: React.FC = () => {
         return <Rating value={rowData.estrellas} readOnly cancel={false} />;
     };
 
-    const validate = (item: Partial<Libro>) => {
-        const errors: Record<string, string> = {};
-        if (!item.isbn) errors.isbn = t('common:messages.required');
-        if (!item.titulo) errors.titulo = t('common:messages.required');
-        if (!item.autor) errors.autor = t('common:messages.required');
-        return errors;
+    const validate = (item: any) => {
+        const result = LibroSchema.safeParse(item);
+        return result.success ? {} : formatZodErrors(result.error);
     };
 
     return (

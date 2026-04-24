@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { personaService } from '../services/persona.service';
 import type { Persona } from '../services/persona.service';
+import { PersonaSchema } from '../util/schemas';
+import { formatZodErrors } from '../util/validation';
 
 interface PersonaFilters {
     dni: string;
@@ -27,18 +29,9 @@ const PersonaPage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
-    const validate = (item: Partial<Persona>) => {
-        const errors: Record<string, string> = {};
-        if (!item.dni) errors.dni = t('common:messages.required');
-        else if (!/^[0-9]{8}[A-Z]$/.test(item.dni)) errors.dni = t('common:messages.invalidFormat');
-        
-        if (!item.nombre) errors.nombre = t('common:messages.required');
-        if (!item.apellido1) errors.apellido1 = t('common:messages.required');
-        
-        if (!item.email) errors.email = t('common:messages.required');
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(item.email)) errors.email = t('common:messages.invalidFormat');
-        
-        return errors;
+    const validate = (item: any) => {
+        const result = PersonaSchema.safeParse(item);
+        return result.success ? {} : formatZodErrors(result.error);
     };
 
     return (

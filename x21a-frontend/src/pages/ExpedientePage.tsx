@@ -12,6 +12,8 @@ import { DataTableMaintenance } from '../components/DataTableMaintenance';
 import { expedienteService } from '../services/expediente.service';
 import { MunicipioEnlazadoSelect } from '../components/MunicipioEnlazadoSelect';
 import type { Expediente } from '../services/expediente.service';
+import { ExpedienteSchema } from '../util/schemas';
+import { formatZodErrors } from '../util/validation';
 
 interface ExpedienteFilters {
     referencia: string;
@@ -55,11 +57,9 @@ const ExpedientePage: React.FC = () => {
         return i18n.language === 'eu' ? `${year}/${month}/${day}` : `${day}/${month}/${year}`;
     };
 
-    const validate = (item: Partial<Expediente>) => {
-        const errors: Record<string, string> = {};
-        if (!item.referencia) errors.referencia = t('common:messages.required');
-        if (!item.solicitante) errors.solicitante = t('common:messages.required');
-        return errors;
+    const validate = (item: any) => {
+        const result = ExpedienteSchema.safeParse(item);
+        return result.success ? {} : formatZodErrors(result.error);
     };
 
     return (
