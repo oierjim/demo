@@ -86,20 +86,20 @@ const SeriesPage: React.FC = () => {
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:serie.title')}</label>
                             <IconField iconPosition="left">
                                 <InputIcon className="pi pi-search" />
-                                <InputText value={filters.titulo} onChange={(e) => setFilters(prev => ({...prev, titulo: e.target.value}))} placeholder={t('common:actions.search')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                                <InputText value={filters.titulo} onChange={(e) => setFilters((prev: any) => ({...prev, titulo: e.target.value}))} placeholder={t('common:actions.search')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                             </IconField>
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:serie.type')}</label>
-                            <Dropdown value={filters.tipo} options={tipos} onChange={(e) => setFilters(prev => ({...prev, tipo: e.value}))} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} appendTo={() => document.body} />
+                            <Dropdown value={filters.tipo} options={tipos} onChange={(e) => setFilters((prev: any) => ({...prev, tipo: e.value}))} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('pages:filters.fechaEstrenoDesde')}</label>
-                            <Calendar value={filters.fechaEstrenoDesde} onChange={(e) => setFilters(prev => ({...prev, fechaEstrenoDesde: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar value={filters.fechaEstrenoDesde} onChange={(e) => setFilters((prev: any) => ({...prev, fechaEstrenoDesde: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('pages:filters.fechaEstrenoHasta')}</label>
-                            <Calendar value={filters.fechaEstrenoHasta} onChange={(e) => setFilters(prev => ({...prev, fechaEstrenoHasta: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar value={filters.fechaEstrenoHasta} onChange={(e) => setFilters((prev: any) => ({...prev, fechaEstrenoHasta: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
                         </div>
                     </>
                 )}
@@ -107,7 +107,7 @@ const SeriesPage: React.FC = () => {
 
             <DataTableMaintenance.Toolbar 
                 showExport 
-                newItemDefault={{ titulo: '', tipo: 'Comedia', plataforma: 'Netflix', fechaEstreno: new Date() }} 
+                newItemDefault={{ titulo: '', tipo: 'Comedia', plataforma: 'Netflix', fechaEstreno: new Date() } as any} 
             />
 
             <DataTableMaintenance.Table selectionMode="multiple">
@@ -123,20 +123,20 @@ const SeriesPage: React.FC = () => {
                     <>
                         <div className="field mb-4">
                             <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:serie.title')}</label>
-                            <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem(prev => ({ ...prev, titulo: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.titulo} />
+                            <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem((prev: any) => ({ ...prev, titulo: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.titulo} />
                             {errors.titulo && <small className="p-error">{errors.titulo}</small>}
                         </div>
                         <div className="field mb-4">
                             <label htmlFor="tipo" className="font-bold block mb-2">{t('domain:serie.type')}</label>
-                            <Dropdown id="tipo" value={item.tipo} options={tipos} onChange={(e) => setItem(prev => ({ ...prev, tipo: e.value }))} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
+                            <Dropdown id="tipo" value={item.tipo} options={tipos} onChange={(e) => setItem((prev: any) => ({ ...prev, tipo: e.value }))} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field mb-4">
                             <label htmlFor="plataforma" className="font-bold block mb-2">{t('domain:serie.platform')}</label>
-                            <Dropdown id="plataforma" value={item.plataforma} options={plataformas} onChange={(e) => setItem(prev => ({ ...prev, plataforma: e.value }))} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
+                            <Dropdown id="plataforma" value={item.plataforma} options={plataformas} onChange={(e) => setItem((prev: any) => ({ ...prev, plataforma: e.value }))} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                         <div className="field">
                             <label htmlFor="fechaEstreno" className="font-bold block mb-2">{t('domain:serie.premiere')}</label>
-                            <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem(prev => ({ ...prev, fechaEstreno: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon disabled={isReadOnly} />
+                            <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem((prev: any) => ({ ...prev, fechaEstreno: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon disabled={isReadOnly} />
                         </div>
                     </>
                 )}

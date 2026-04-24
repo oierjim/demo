@@ -74,20 +74,20 @@ const PeliculaPage: React.FC = () => {
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:pelicula.title', { defaultValue: 'Título' })}</label>
                             <IconField iconPosition="left">
                                 <InputIcon className="pi pi-search" />
-                                <InputText value={filters.titulo} onChange={(e) => setFilters(prev => ({...prev, titulo: e.target.value}))} placeholder={t('common:actions.search')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                                <InputText value={filters.titulo} onChange={(e) => setFilters((prev: any) => ({...prev, titulo: e.target.value}))} placeholder={t('common:actions.search')} className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                             </IconField>
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:pelicula.genre', { defaultValue: 'Género' })}</label>
-                            <Dropdown value={filters.genero} options={generos} onChange={(e) => setFilters(prev => ({...prev, genero: e.value}))} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} appendTo={() => document.body} />
+                            <Dropdown value={filters.genero} options={generos} onChange={(e) => setFilters((prev: any) => ({...prev, genero: e.value}))} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('pages:filters.fechaEstrenoDesde')}</label>
-                            <Calendar value={filters.fechaEstrenoDesde} onChange={(e) => setFilters(prev => ({...prev, fechaEstrenoDesde: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar value={filters.fechaEstrenoDesde} onChange={(e) => setFilters((prev: any) => ({...prev, fechaEstrenoDesde: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('pages:filters.fechaEstrenoHasta')}</label>
-                            <Calendar value={filters.fechaEstrenoHasta} onChange={(e) => setFilters(prev => ({...prev, fechaEstrenoHasta: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar value={filters.fechaEstrenoHasta} onChange={(e) => setFilters((prev: any) => ({...prev, fechaEstrenoHasta: e.value as Date}))} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
                         </div>
                     </>
                 )}
@@ -97,14 +97,14 @@ const PeliculaPage: React.FC = () => {
                 showNew={false}
                 showDelete={false}
                 showExport={false}
-                newItemDefault={{ titulo: '', director: '', genero: 'Drama', duracion: 120, oscar: false, fechaEstreno: new Date() }} 
+                newItemDefault={{ titulo: '', director: '', genero: 'Drama', duracion: 120, oscar: false, fechaEstreno: new Date() } as any} 
                 extraButtons={(selectedItems) => (
                     <Button 
                         label={t('pages:peliculas.viewTrailer')} 
                         icon="pi pi-external-link" 
                         severity="help" 
                         disabled={selectedItems.length !== 1} 
-                        onClick={() => alert(`${t('pages:peliculas.viewTrailer')}: ${selectedItems[0].titulo}`)} 
+                        onClick={() => alert(`${t('pages:peliculas.viewTrailer')}: ${(selectedItems[0] as any).titulo}`)} 
                     />
                 )}
             />
@@ -123,30 +123,30 @@ const PeliculaPage: React.FC = () => {
                     <>
                         <div className="field mb-4">
                             <label htmlFor="titulo" className="font-bold block mb-2">{t('domain:pelicula.title', { defaultValue: 'Título' })}</label>
-                            <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem(prev => ({ ...prev, titulo: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.titulo} />
+                            <InputText id="titulo" value={item.titulo || ''} onChange={(e) => setItem((prev: any) => ({ ...prev, titulo: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.titulo} />
                             {errors.titulo && <small className="p-error">{errors.titulo}</small>}
                         </div>
                         <div className="field mb-4">
                             <label htmlFor="director" className="font-bold block mb-2">{t('domain:pelicula.director', { defaultValue: 'Director' })}</label>
-                            <InputText id="director" value={item.director || ''} onChange={(e) => setItem(prev => ({ ...prev, director: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.director} />
+                            <InputText id="director" value={item.director || ''} onChange={(e) => setItem((prev: any) => ({ ...prev, director: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.director} />
                             {errors.director && <small className="p-error">{errors.director}</small>}
                         </div>
                         <div className="formgrid grid">
                             <div className="field col-12 md:col-6">
                                 <label htmlFor="genero" className="font-bold block mb-2">{t('domain:pelicula.genre', { defaultValue: 'Género' })}</label>
-                                <Dropdown id="genero" value={item.genero} options={generos} onChange={(e) => setItem(prev => ({ ...prev, genero: e.value }))} placeholder={t('common:actions.select')} appendTo={() => document.body} disabled={isReadOnly} />
+                                <Dropdown id="genero" value={item.genero} options={generos} onChange={(e) => setItem((prev: any) => ({ ...prev, genero: e.value }))} placeholder={t('common:actions.select')} appendTo={() => document.body} disabled={isReadOnly} />
                             </div>
                             <div className="field col-12 md:col-6">
                                 <label htmlFor="duracion" className="font-bold block mb-2">{t('domain:pelicula.duration', { defaultValue: 'Duración (min)' })}</label>
-                                <InputNumber id="duracion" value={item.duracion} onValueChange={(e) => setItem(prev => ({ ...prev, duracion: e.value || 0 }))} suffix=" min" disabled={isReadOnly} />
+                                <InputNumber id="duracion" value={item.duracion} onValueChange={(e) => setItem((prev: any) => ({ ...prev, duracion: e.value || 0 }))} suffix=" min" disabled={isReadOnly} />
                             </div>
                         </div>
                         <div className="field mb-4">
                             <label htmlFor="fechaEstreno" className="font-bold block mb-2">{t('domain:pelicula.premiere', { defaultValue: 'Fecha Estreno' })}</label>
-                            <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem(prev => ({ ...prev, fechaEstreno: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon disabled={isReadOnly} />
+                            <Calendar id="fechaEstreno" value={item.fechaEstreno ? new Date(item.fechaEstreno) : null} onChange={(e) => setItem((prev: any) => ({ ...prev, fechaEstreno: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} showButtonBar showIcon disabled={isReadOnly} />
                         </div>
                         <div className="field-checkbox">
-                            <Checkbox id="oscar" onChange={e => setItem(prev => ({ ...prev, oscar: e.checked || false }))} checked={item.oscar || false} disabled={isReadOnly} />
+                            <Checkbox id="oscar" onChange={e => setItem((prev: any) => ({ ...prev, oscar: e.checked || false }))} checked={item.oscar || false} disabled={isReadOnly} />
                             <label htmlFor="oscar" className="ml-2 font-bold">{t('domain:pelicula.oscar', { defaultValue: '¿Tiene Oscar?' })}</label>
                         </div>
                     </>

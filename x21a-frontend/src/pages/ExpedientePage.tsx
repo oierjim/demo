@@ -76,29 +76,29 @@ const ExpedientePage: React.FC = () => {
                     <>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('pages:filters.fechaAperturaDesde')}</label>
-                            <Calendar value={filters.fechaAperturaDesde} onChange={(e) => setFilters(prev => ({...prev, fechaAperturaDesde: e.value as Date}))} placeholder={t('components:calendar.placeholder')} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar value={filters.fechaAperturaDesde} onChange={(e) => setFilters((prev: any) => ({...prev, fechaAperturaDesde: e.value as Date}))} placeholder={t('components:calendar.placeholder')} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('pages:filters.fechaAperturaHasta')}</label>
-                            <Calendar value={filters.fechaAperturaHasta} onChange={(e) => setFilters(prev => ({...prev, fechaAperturaHasta: e.value as Date}))} placeholder={t('components:calendar.placeholder')} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
+                            <Calendar value={filters.fechaAperturaHasta} onChange={(e) => setFilters((prev: any) => ({...prev, fechaAperturaHasta: e.value as Date}))} placeholder={t('components:calendar.placeholder')} showIcon showButtonBar className="w-full" inputClassName="p-inputtext-sm w-full" inputStyle={{ height: '39px' }} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} showOnFocus={true} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-3">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:expediente.reference')}</label>
                             <IconField iconPosition="left">
                                 <InputIcon className="pi pi-id-card" />
-                                <InputText value={filters.referencia} onChange={(e) => setFilters(prev => ({...prev, referencia: e.target.value}))} placeholder="EXP-202X-..." className="p-inputtext-sm w-full" style={{ height: '39px' }} />
+                                <InputText value={filters.referencia} onChange={(e) => setFilters((prev: any) => ({...prev, referencia: e.target.value}))} placeholder="EXP-202X-..." className="p-inputtext-sm w-full" style={{ height: '39px' }} />
                             </IconField>
                         </div>
                         <div className="col-12 md:col-2">
                             <label className="block mb-2 font-semibold text-slate-600 text-xs uppercase tracking-wider">{t('domain:expediente.status')}</label>
-                            <Dropdown value={filters.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setFilters(prev => ({...prev, estado: e.value}))} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} />
+                            <Dropdown value={filters.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setFilters((prev: any) => ({...prev, estado: e.value}))} placeholder={t('domain:status.any')} showClear className="p-inputtext-sm w-full" style={{ height: '39px' }} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} />
                         </div>
                         <div className="col-12 md:col-4">
                             <MunicipioEnlazadoSelect 
                                 provinciaId={filters.provincia || undefined}
                                 municipioId={filters.municipio || undefined}
-                                onProvinciaChange={(id) => setFilters(prev => ({...prev, provincia: id || null, municipio: null}))}
-                                onMunicipioChange={(id) => setFilters(prev => ({...prev, municipio: id || null}))}
+                                onProvinciaChange={(id) => setFilters((prev: any) => ({...prev, provincia: id || null, municipio: null}))}
+                                onMunicipioChange={(id) => setFilters((prev: any) => ({...prev, municipio: id || null}))}
                                 isFilter={true}
                                 containerClass="grid"
                             />
@@ -110,7 +110,7 @@ const ExpedientePage: React.FC = () => {
             <DataTableMaintenance.Toolbar 
                 showExport 
                 readOnly={true}
-                newItemDefault={{ estado: 'Abierto', referencia: '', solicitante: '', fechaApertura: new Date() }} 
+                newItemDefault={{ estado: 'Abierto', referencia: '', solicitante: '', fechaApertura: new Date() } as any} 
                 extraButtons={(selectedItems) => (
                     <>
                         <Button 
@@ -147,40 +147,40 @@ const ExpedientePage: React.FC = () => {
                     <>
                         <div className="field mb-4">
                             <label htmlFor="referencia" className="font-bold block mb-2">{t('domain:expediente.reference')}</label>
-                            <InputText id="referencia" value={item.referencia || ''} onChange={(e) => setItem(prev => ({ ...prev, referencia: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.referencia} />
+                            <InputText id="referencia" value={item.referencia || ''} onChange={(e) => setItem((prev: any) => ({ ...prev, referencia: e.target.value }))} required autoFocus disabled={isReadOnly} invalid={!!errors.referencia} />
                             {errors.referencia && <small className="p-error">{errors.referencia}</small>}
                         </div>
                         <div className="field mb-4">
                             <label htmlFor="solicitante" className="font-bold block mb-2">{t('domain:expediente.applicant')}</label>
-                            <InputText id="solicitante" value={item.solicitante || ''} onChange={(e) => setItem(prev => ({ ...prev, solicitante: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.solicitante} />
+                            <InputText id="solicitante" value={item.solicitante || ''} onChange={(e) => setItem((prev: any) => ({ ...prev, solicitante: e.target.value }))} required disabled={isReadOnly} invalid={!!errors.solicitante} />
                             {errors.solicitante && <small className="p-error">{errors.solicitante}</small>}
                         </div>
                         <div className="formgrid grid">
                             <div className="field col-6">
                                 <label htmlFor="fecha" className="font-bold block mb-2">{t('domain:expediente.dateOpen')}</label>
-                                <Calendar id="fecha" value={item.fechaApertura instanceof Date ? item.fechaApertura : (item.fechaApertura ? new Date(item.fechaApertura) : null)} onChange={(e) => setItem(prev => ({ ...prev, fechaApertura: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
+                                <Calendar id="fecha" value={item.fechaApertura instanceof Date ? item.fechaApertura : (item.fechaApertura ? new Date(item.fechaApertura) : null)} onChange={(e) => setItem((prev: any) => ({ ...prev, fechaApertura: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                             </div>
                             <div className="field col-6">
                                 <label htmlFor="fechaCierre" className="font-bold block mb-2">{t('domain:expediente.dateClose')}</label>
-                                <Calendar id="fechaCierre" value={item.fechaCierre instanceof Date ? item.fechaCierre : (item.fechaCierre ? new Date(item.fechaCierre) : null)} onChange={(e) => setItem(prev => ({ ...prev, fechaCierre: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
+                                <Calendar id="fechaCierre" value={item.fechaCierre instanceof Date ? item.fechaCierre : (item.fechaCierre ? new Date(item.fechaCierre) : null)} onChange={(e) => setItem((prev: any) => ({ ...prev, fechaCierre: e.value as Date }))} dateFormat={i18n.language === 'eu' ? 'yy/mm/dd' : 'dd/mm/yy'} placeholder={t('components:calendar.placeholder')} showOnFocus={true} appendTo={() => document.body} disabled={isReadOnly} />
                             </div>
                         </div>
                         
                         <MunicipioEnlazadoSelect 
                             provinciaId={getId(item.provincia)}
                             municipioId={getId(item.municipio)}
-                            onProvinciaChange={(id) => setItem(prev => ({ ...prev, provincia: id ? { id } as any : undefined, municipio: undefined }))}
-                            onMunicipioChange={(id) => setItem(prev => ({ ...prev, municipio: id ? { id } as any : undefined }))}
+                            onProvinciaChange={(id) => setItem((prev: any) => ({ ...prev, provincia: id ? { id } as any : undefined, municipio: undefined }))}
+                            onMunicipioChange={(id) => setItem((prev: any) => ({ ...prev, municipio: id ? { id } as any : undefined }))}
                             isReadOnly={isReadOnly}
                         />
 
                         <div className="field mb-4">
                             <label htmlFor="ultimoTramite" className="font-bold block mb-2">{t('domain:expediente.lastStep')}</label>
-                            <InputText id="ultimoTramite" value={item.ultimoTramite || ''} onChange={(e) => setItem(prev => ({ ...prev, ultimoTramite: e.target.value }))} disabled={isReadOnly} />
+                            <InputText id="ultimoTramite" value={item.ultimoTramite || ''} onChange={(e) => setItem((prev: any) => ({ ...prev, ultimoTramite: e.target.value }))} disabled={isReadOnly} />
                         </div>
                         <div className="field">
                             <label htmlFor="estado" className="font-bold block mb-2">{t('domain:expediente.status')}</label>
-                            <Dropdown id="estado" value={item.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setItem(prev => ({ ...prev, estado: e.value }))} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
+                            <Dropdown id="estado" value={item.estado} options={estados} optionLabel="label" optionValue="value" onChange={(e) => setItem((prev: any) => ({ ...prev, estado: e.value }))} placeholder={t('common:actions.select')} emptyMessage={t('common:messages.noOptions')} appendTo={() => document.body} disabled={isReadOnly} />
                         </div>
                     </>
                 )}
