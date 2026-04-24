@@ -18,20 +18,18 @@ Ubicación: `x21a-backend/src/main/java/com/ejie/x21a/`
   ```json
   { "filter": { ... }, "page": 0, "rows": 10, "sidx": "campo", "sord": "asc" }
   ```
-- **Carga de Datos**: Se utiliza `@PostConstruct` en los controladores específicos (ej. `AnimalController`) para poblar la base de datos con 100 registros de prueba si está vacía.
 
-### Frontend (React / TypeScript)
+### 🎨 Frontend (React / TypeScript)
 Ubicación: `x21a-frontend/src/`
 
-- **`services/base.service.ts`**: Clase abstracta que encapsula las llamadas a la API genérica.
-- **`components/DataTableTemplate.tsx`**: Componente unificado que centraliza toda la lógica de la tabla. Sus capacidades avanzadas incluyen:
-  - **`selectionMode`**: Permite elegir entre `'multiple'`, `'single'` o `'none'`.
-  - **Control de Botones**: Propiedades booleanas `showNew`, `showEdit`, `showDelete`, `showExport`.
-  - **`readOnly`**: Si es `true`, la edición se convierte en modo "Detalle" (solo lectura). Los registros **nuevos** siguen siendo editables aunque esta propiedad sea `true`.
-  - **Validación**: Propiedad `validate` que recibe una función `(item) => Record<string, string>`. Los errores se pasan automáticamente a `dialogFields`.
-  - **Títulos Dinámicos**: El título del diálogo se genera como `[Acción] [Entidad]` (ej: "Nuevo Animal"). Usa la propiedad `entityNameKey` para buscar la traducción en `domain.json`.
-  - **`extraButtons`**: Slot para inyectar botones personalizados basados en la selección.
-  - Integración automática con el hook `useMaintenance`.
+- **`services/base.service.ts`**: Clase abstracta para llamadas a la API genérica.
+- **`components/DataTableMaintenance.tsx`**: Sistema de **Componentes Compuestos** que centraliza la lógica mediante Context API. Sub-componentes disponibles:
+  - **`<DataTableMaintenance.Title title="..." />`**: Título de la sección.
+  - **`<DataTableMaintenance.Filters>`**: Contenedor de filtros. Recibe una función `(filters, setFilters) => ReactNode`.
+  - **`<DataTableMaintenance.Toolbar />`**: Barra de herramientas CRUD. Soporta `showNew`, `showEdit`, `showDelete`, `showExport` y `extraButtons`.
+  - **`<DataTableMaintenance.Table>`**: Renderiza la tabla. Maneja automáticamente paginación, ordenación y selección (Lazy).
+  - **`<DataTableMaintenance.Dialog>`**: Diálogo de edición. Recibe una función `(item, setItem, errors, isReadOnly) => ReactNode`.
+- **Hook `useMaintenanceContext`**: Permite a cualquier sub-componente acceder al estado del mantenimiento actual.
 
 ## 🚀 Cómo añadir un nuevo mantenimiento (Ejemplo: "Vehiculos")
 
@@ -40,27 +38,42 @@ Ubicación: `x21a-frontend/src/`
     - Crear `VehiculoRepository`, `VehiculoService` y `VehiculoController`.
 2.  **Frontend**:
     - Crear `services/vehiculo.service.ts` extendiendo `BaseService`.
-    - Crear `pages/VehiculoPage.tsx` utilizando `DataTableTemplate`.
-    - Definir la lógica de validación y pasarla al prop `validate`.
-    - Asegurar que los inputs en `dialogFields` usen la propiedad `invalid={!!errors.campo}` y muestren el mensaje `<small className="p-error">{errors.campo}</small>`.
+    - Crear `pages/VehiculoPage.tsx` con la estructura declarativa:
+      ```tsx
+      <DataTableMaintenance entityKey="vehiculo" service={vehiculoService} initialFilters={DEFAULT_FILTERS}>
+          <DataTableMaintenance.Title title="Gestión de Vehículos" />
+          <DataTableMaintenance.Filters>
+              {(filters, setFilters) => (
+                  <div className="col-12 md:col-4">
+                      <InputText value={filters.matricula} onChange={(e) => setFilters(prev => ({...prev, matricula: e.target.value}))} />
+                  </div>
+              )}
+          </DataTableMaintenance.Filters>
+          <DataTableMaintenance.Toolbar showExport />
+          <DataTableMaintenance.Table>
+              <Column field="matricula" header="Matrícula" sortable />
+              <Column field="marca" header="Marca" sortable />
+          </DataTableMaintenance.Table>
+          <DataTableMaintenance.Dialog>
+              {(item, setItem, errors, isReadOnly) => (
+                  <div className="field">
+                      <InputText value={item.matricula} onChange={(e) => setItem(prev => ({...prev, matricula: e.target.value}))} disabled={isReadOnly} />
+                  </div>
+              )}
+          </DataTableMaintenance.Dialog>
+      </DataTableMaintenance>
+      ```
+3.  **Rutas**: Añadir la ruta en `main.tsx` usando `React.lazy`.
 
 ## 📌 Convenciones Importantes
 
 ### 📅 Gestión de Fechas
-- **Backend**: Por convención, todas las fechas en los modelos (`@Entity`) y filtros (`Filter`) deben utilizar siempre **`java.util.Date`** para mantener la compatibilidad con los serializadores.
-- **Frontend**: Los componentes `Calendar` de PrimeReact manejan objetos `Date` nativos de JavaScript, compatibles con el backend.
+- **Backend**: Todas las fechas en `@Entity` y `Filter` deben usar **`java.util.Date`**.
+- **Frontend**: Usar componentes `Calendar` de PrimeReact que manejan objetos `Date` nativos.
 
-### 🆔 Gestión de IDs y Compatibilidad
-Cada entidad debe exponer un identificador bajo el nombre `id` en el JSON.
-- **Patrón de Alias**: Si la PK no se llama `id`, implementar `getId()` y `setId()` como alias.
-- **Tipado**: El tipo de ID en `BaseController<T, ID, F>` debe coincidir con el de la PK.
+### 🆔 Gestión de IDs
+- Cada entidad debe exponer un campo `id` en el JSON. Usar alias `getId()`/`setId()` si la PK tiene otro nombre.
 
-### 🛠️ Git y Línea de Comandos (PowerShell / Win32)
-En el entorno **win32**, se utiliza **PowerShell**.
-- **Chaining**: Usar `;` en lugar de `&&`.
-- **Commit Seguro**: `git add . ; if ($?) { git commit -m '...' } ; if ($?) { git push }`.
-
-### 🗄️ Base de Datos y Persistencia
-- **H2 Database**: Los datos se guardan en `./data/x21aDB`. Borrar este archivo para regenerar tablas tras cambios en el modelo.
-- **Mapeo Físico**: Usar `@Column(name = "NOMBRE_COL")` si es necesario.
-- **Logs**: Nivel `DEBUG` para `com.ejie.x21a` para visualizar queries y filtrado genérico.
+### 🛠️ Git y Línea de Comandos (Win32 / PowerShell)
+- Chaining: Usar `;` en lugar de `&&`.
+- Commit Seguro: `git add . ; if ($?) { git commit -m '...' } ; if ($?) { git push }`.
