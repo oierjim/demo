@@ -212,6 +212,8 @@ export function useMaintenance<T extends { id: string | number }, F>({
         errors, setErrors,
         filters, setFilters, page, rows, sortField, sortOrder, onPage, onSort,
         handleApplyFilters, handleClearFilters, openNew, openEdit,
-        closeDialog, saveItem, deleteSelected, isSaving: saveMutation.isPending
+        closeDialog, saveItem, deleteSelected, 
+        isSaving: saveMutation.isPending,
+        isDeleting: deleteMutation.isPending
     };
 }

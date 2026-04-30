@@ -26,10 +26,15 @@ Ubicación: `x21a-frontend/src/`
 - **`components/DataTableMaintenance.tsx`**: Sistema de **Componentes Compuestos** que centraliza la lógica mediante Context API. Sub-componentes disponibles:
   - **`<DataTableMaintenance.Title title="..." />`**: Título de la sección.
   - **`<DataTableMaintenance.Filters>`**: Contenedor de filtros. Recibe una función `(filters, setFilters) => ReactNode`.
-  - **`<DataTableMaintenance.Toolbar />`**: Barra de herramientas CRUD. Soporta `showNew`, `showEdit`, `showDelete`, `showExport` y `extraButtons`.
-  - **`<DataTableMaintenance.Table>`**: Renderiza la tabla. Maneja automáticamente paginación, ordenación y selección (Lazy).
-  - **`<DataTableMaintenance.Dialog>`**: Diálogo de edición. Recibe una función `(item, setItem, errors, isReadOnly) => ReactNode`.
-- **Hook `useMaintenanceContext`**: Permite a cualquier sub-componente acceder al estado del mantenimiento actual.
+  - **`<DataTableMaintenance.Toolbar />`**: Barra de herramientas CRUD. 
+    - Atributos: `showNew`, `showEdit`, `showDelete`, `showExport`, `readOnly`.
+    - `extraButtons`: Función `(selectedItems) => ReactNode` para añadir acciones personalizadas.
+  - **`<DataTableMaintenance.Table>`**: Renderiza la tabla con soporte para:
+    - **Selección Global**: Soporta "Seleccionar todas las páginas" automáticamente si `selectionMode="multiple"`.
+    - **Paginación Lazy**: Sincronizada con el backend.
+  - **`<DataTableMaintenance.Dialog>`**: Diálogo de edición/detalle.
+    - Atributo `readOnly={true}` para forzar modo vista (útil en mantenimientos de solo consulta).
+- **Hook `useMaintenanceContext`**: Permite acceder al estado (`selectedItems`, `totalRecords`, `isLoading`, etc.) desde cualquier sub-componente o botón personalizado.
 
 ## 🚀 Cómo añadir un nuevo mantenimiento (Ejemplo: "Vehiculos")
 

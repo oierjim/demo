@@ -134,14 +134,19 @@ const Filters: React.FC<{ children: (filters: any, setFilters: Dispatch<SetState
 };
 
 const MaintenanceToolbar: React.FC<any> = ({ showNew = true, showEdit = true, showDelete = true, showExport = true, readOnly = false, newItemDefault = {}, extraButtons }) => {
-    const { selectedItems, selectAllPages, openNew, openEdit, deleteSelected, t } = useMaintenanceContext();
+    const { selectedItems, selectAllPages, totalRecords, deselectedItems, openNew, openEdit, deleteSelected, isDeleting, t } = useMaintenanceContext();
     const confirmDelete = useCallback(() => { confirmDialog({ message: t('common:messages.confirmDelete'), header: t('common:messages.deleteTitle'), icon: 'pi pi-exclamation-triangle', acceptLabel: t('common:labels.yes'), rejectLabel: t('common:labels.no'), accept: deleteSelected }); }, [t, deleteSelected]);
+    
+    const selectedCount = selectAllPages ? totalRecords - deselectedItems.length : selectedItems.length;
+    const isEditDisabled = selectAllPages || selectedItems.length !== 1;
+    const isDeleteDisabled = selectedCount === 0;
+
     return (
         <Toolbar className="mb-4 bg-transparent border-none p-0" left={
             <div className="flex flex-wrap gap-2">
                 {showNew && <Button label={t('common:actions.new')} icon="pi pi-plus" severity="success" onClick={() => openNew(newItemDefault)} raised />}
-                {showEdit && <Button label={readOnly ? t('common:actions.detail') : t('common:actions.edit')} icon={readOnly ? "pi pi-eye" : "pi pi-pencil"} severity="info" disabled={selectedItems.length !== 1} onClick={() => openEdit(selectedItems[0])} />}
-                {showDelete && <Button label={t('common:actions.delete')} icon="pi pi-trash" severity="danger" disabled={selectedItems.length === 0 && !selectAllPages} onClick={confirmDelete} />}
+                {showEdit && <Button label={readOnly ? t('common:actions.detail') : t('common:actions.edit')} icon={readOnly ? "pi pi-eye" : "pi pi-pencil"} severity="info" disabled={isEditDisabled} onClick={() => openEdit(selectedItems[0])} />}
+                {showDelete && <Button label={t('common:actions.delete')} icon={isDeleting ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" disabled={isDeleteDisabled} onClick={confirmDelete} />}
                 {extraButtons && extraButtons(selectedItems)}
             </div>
         } right={showExport ? <Button label={t('common:actions.export')} icon="pi pi-upload" severity="secondary" onClick={() => window.dispatchEvent(new CustomEvent('maintenance-export'))} text /> : null} />
