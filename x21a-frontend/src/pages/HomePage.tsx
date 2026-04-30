@@ -10,7 +10,7 @@ const HomePage: React.FC = () => {
       <p>Has iniciado sesión correctamente.</p>
       
       <div className="info-card">
-        <h3>Credenciales de Usuario (XLNetS)</h3>
+        <h3>Credenciales de Usuario</h3>
         <ul>
           <li><strong>Nombre:</strong> {user?.name}</li>
           <li><strong>Apellido:</strong> {user?.surname1}</li>

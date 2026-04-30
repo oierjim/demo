@@ -15,7 +15,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }
 
   if (!isAuthenticated) {
-    return <div className="redirecting-screen">Redirigiendo a XLNetS...</div>;
+    return <div className="redirecting-screen">Redirigiendo a okta...</div>;
   }
 
   return <>{children}</>;
