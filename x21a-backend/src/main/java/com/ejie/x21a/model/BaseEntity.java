@@ -1,9 +1,9 @@
 package com.ejie.x21a.model;
 
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+
 import org.hibernate.annotations.GenericGenerator;
 
 @MappedSuperclass

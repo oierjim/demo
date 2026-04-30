@@ -45,6 +45,7 @@ export interface MaintenanceContextProps<T extends { id: string | number }, F> {
     saveItem: () => void;
     deleteSelected: () => void;
     isSaving: boolean;
+    isDeleting: boolean;
     entityKey: string;
     initialFilters: F;
     t: any;
