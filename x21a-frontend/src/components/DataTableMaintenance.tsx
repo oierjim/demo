@@ -149,14 +149,47 @@ const MaintenanceToolbar: React.FC<any> = ({ showNew = true, showEdit = true, sh
 };
 
 const Table: React.FC<any> = ({ children, selectionMode = 'multiple', dataKey = 'id' }) => {
-    const { filteredData, totalRecords, selectedItems, selectAllPages, deselectedItems, onSelectionChange, isLoading, page, rows, sortField, sortOrder, onPage, onSort, t } = useMaintenanceContext();
+    const { filteredData, totalRecords, selectedItems, selectAllPages, deselectedItems, onSelectionChange, handleSelectAllPages, handleClearSelection, isLoading, page, rows, sortField, sortOrder, onPage, onSort, t } = useMaintenanceContext();
     const dt = useRef<any>(null);
     React.useEffect(() => { const h = () => dt.current?.exportCSV(); window.addEventListener('maintenance-export', h); return () => window.removeEventListener('maintenance-export', h); }, []);
     const isMultiple = selectionMode === 'multiple';
     const isSingle = selectionMode === 'single';
     const hasSelection = selectionMode !== 'none';
+
+    const showSelectAllBanner = isMultiple && !isLoading && (
+        (selectedItems.length === filteredData.length && filteredData.length > 0 && totalRecords > filteredData.length && !selectAllPages) ||
+        (selectAllPages)
+    );
+
     return (
-        <div className="p-datatable-container shadow-3 border-round-xl bg-white mb-8">
+        <div className="p-datatable-container shadow-3 border-round-xl bg-white mb-8 overflow-hidden">
+            {showSelectAllBanner && (
+                <div className="bg-blue-50 p-3 text-center border-bottom-1 border-blue-100 flex align-items-center justify-content-center gap-2 animate-fadein">
+                    {!selectAllPages ? (
+                        <>
+                            <span className="text-sm text-blue-700">
+                                {t('components:selection.allPageSelected', { count: selectedItems.length })}
+                            </span>
+                            <Button 
+                                label={t('components:selection.selectAll', { total: totalRecords })} 
+                                className="p-button-link p-0 text-sm text-blue-800 font-bold hover:underline" 
+                                onClick={handleSelectAllPages} 
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-sm text-blue-700">
+                                {t('components:selection.allPagesSelected', { total: totalRecords - deselectedItems.length })}
+                            </span>
+                            <Button 
+                                label={t('components:selection.clearSelection')} 
+                                className="p-button-link p-0 text-sm text-blue-800 font-bold hover:underline" 
+                                onClick={handleClearSelection} 
+                            />
+                        </>
+                    )}
+                </div>
+            )}
             <DataTable {...({
                 ref: dt, value: filteredData, lazy: true, paginator: true, first: page * rows, rows, totalRecords, onPage, onSort, sortField: sortField || '', sortOrder: sortOrder as any,
                 selectionMode: hasSelection ? (isMultiple ? "multiple" : "single") : undefined,

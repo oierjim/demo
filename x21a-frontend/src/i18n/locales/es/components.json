@@ -4,6 +4,12 @@
     "total": "Total: {{count}} registros",
     "report": "{first} - {last} de {totalRecords}"
   },
+  "selection": {
+    "allPageSelected": "Has seleccionado los {{count}} elementos de esta página.",
+    "selectAll": "Seleccionar los {{total}} elementos de todas las páginas",
+    "allPagesSelected": "Has seleccionado los {{total}} elementos de todas las páginas.",
+    "clearSelection": "Limpiar selección"
+  },
   "calendar": {
     "placeholder": "dd/mm/aaaa"
   }

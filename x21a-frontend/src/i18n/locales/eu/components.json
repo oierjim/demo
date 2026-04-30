@@ -4,6 +4,12 @@
     "total": "Guztira: {{count}} erregistro",
     "report": "{first} - {last} / {totalRecords}"
   },
+  "selection": {
+    "allPageSelected": "Orrialde honetako {{count}} elementuak hautatu dituzu.",
+    "selectAll": "Hautatu orrialde guztietako {{total}} elementuak",
+    "allPagesSelected": "Orrialde guztietako {{total}} elementuak hautatu dituzu.",
+    "clearSelection": "Garbitu hautapena"
+  },
   "calendar": {
     "placeholder": "uuuu/hh/ee"
   }
