@@ -32,5 +32,9 @@
   "labels": {
     "yes": "Sí, borrar",
     "no": "No"
+  },
+  "user": {
+    "name": "Nombre",
+    "roles": "Roles"
   }
 }

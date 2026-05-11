@@ -1,11 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  --surface-ground: #edf1f4; /* Blanco roto / Gris sutil */
+  --surface-ground: #edf1f4;
   --surface-section: #ffffff;
   --primary-color: #3b82f6;
   --text-color: #1e293b;
   --text-secondary-color: #64748b;
   --border-radius: 12px;
+  --ejie-header-height: 44px;
+  --ejie-nav-height: 52px;
 }
 
 body {
@@ -17,9 +23,11 @@ body {
 
 #root {
   width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Tarjetas profesionales: Sombra con más contraste y profundidad */
 .card {
   background: var(--surface-section);
   padding: 1.5rem;
@@ -30,54 +38,380 @@ body {
 }
 
 .main-content {
+  flex: 1;
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Header estilizado integrado con el fondo roto */
-.app-header {
+/* ===== TOP HEADER BAR (Logos) ===== */
+.ejie-top-header {
   background: #ffffff;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  padding: 0 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  height: var(--ejie-header-height);
 }
 
-.logo-section {
+.ejie-top-header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  font-weight: 700;
-  font-size: 1.25rem;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 2rem;
+}
+
+.ejie-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ejie-logo img {
+  height: 28px;
+}
+
+.ejie-header-link {
+  font-size: 0.8rem;
+  color: var(--text-secondary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.15s;
+}
+
+.ejie-header-link:hover {
   color: var(--primary-color);
 }
 
-.user-badge {
+.ejie-euskadi-logo {
+  height: 28px;
+  display: block;
+}
+
+/* ===== NAVIGATION BAR ===== */
+.ejie-nav {
+  background: #1472a4;
+  height: var(--ejie-nav-height);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.ejie-nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 2rem;
+}
+
+.ejie-nav-left {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 0.25rem;
+}
+
+.ejie-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0 0.75rem;
+  height: 100%;
+  border-right: 1px solid rgba(255,255,255,0.12);
+  margin-right: 0.25rem;
+  transition: background 0.15s;
+}
+
+.ejie-nav-brand:hover {
+  background: #1a8fc9;
+}
+
+.ejie-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.ejie-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  padding: 0 0.9rem;
+  height: 100%;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.ejie-nav-link:hover,
+.ejie-nav-link.active {
+  background: #1a8fc9;
+  color: #ffffff;
+}
+
+.ejie-nav-link .pi {
+  font-size: 0.85rem;
+}
+
+.ejie-nav-link .pi-chevron-down {
+  font-size: 0.6rem;
+  margin-left: 0.2rem;
+}
+
+/* Dropdown menu */
+.ejie-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  min-width: 220px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  padding: 0.4rem 0;
+  z-index: 2000;
+}
+
+.ejie-nav-item:hover > .ejie-dropdown,
+.ejie-nav-item .ejie-dropdown:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ejie-dropdown-item {
+  position: relative;
+}
+
+.ejie-dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1rem;
+  color: #334155;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: background 0.12s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.ejie-dropdown-link:hover {
+  background: #e3f0fa;
+  color: #1472a4;
+}
+
+.ejie-dropdown-link .pi {
+  font-size: 0.85rem;
+  color: #64748b;
+  width: 1.2rem;
+  text-align: center;
+}
+
+.ejie-dropdown-link .pi-chevron-right {
+  margin-left: auto;
+  font-size: 0.55rem;
+  color: #94a3b8;
+}
+
+/* Nested submenu */
+.ejie-dropdown .ejie-dropdown {
+  top: -0.4rem;
+  left: 100%;
+  margin-left: 4px;
+}
+
+.ejie-dropdown-item:hover > .ejie-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Divider in dropdown */
+.ejie-dropdown-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 0.3rem 0.5rem;
+}
+
+/* Nav right section */
+.ejie-nav-right {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  background: var(--surface-ground);
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-secondary-color);
+  height: 100%;
 }
 
-.app-footer {
-  padding: 3rem 2rem;
-  text-align: center;
-  color: var(--text-secondary-color);
-  font-size: 0.875rem;
+.ejie-nav-tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.ejie-nav-tool:hover {
+  background: #1a8fc9;
+  color: #ffffff;
+}
+
+.ejie-nav-tool .pi {
+  font-size: 1.1rem;
+}
+
+/* Language dropdown in nav */
+.ejie-lang-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.ejie-lang-dropdown .p-dropdown {
+  background: rgba(255,255,255,0.1) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  border-radius: 6px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.ejie-lang-dropdown .p-dropdown .p-dropdown-label {
+  color: #ffffff !important;
+  font-size: 0.8rem !important;
+  padding: 0.25rem 0.5rem !important;
+}
+
+.ejie-lang-dropdown .p-dropdown .p-dropdown-trigger {
+  color: rgba(255,255,255,0.6) !important;
+  width: 1.5rem !important;
+}
+
+.ejie-lang-dropdown .p-dropdown .p-dropdown-trigger .p-dropdown-trigger-icon {
+  font-size: 0.65rem !important;
+}
+
+.ejie-lang-dropdown .p-dropdown:not(.p-disabled):hover {
+  border-color: rgba(255,255,255,0.5) !important;
+}
+
+/* User badge in nav */
+.ejie-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255,255,255,0.85);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.15s;
+  text-decoration: none;
+  cursor: default;
+}
+
+.ejie-nav-user:hover {
+  background: #1a8fc9;
+}
+
+.ejie-nav-user .p-avatar {
+  width: 26px !important;
+  height: 26px !important;
+  font-size: 0.7rem !important;
+}
+
+/* ===== FOOTER ===== */
+.ejie-footer {
+  background: #1472a4;
+  color: #ffffff;
+  margin-top: auto;
+}
+
+.ejie-footer-top {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  font-size: 0.78rem;
+}
+
+.ejie-footer-link {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.ejie-footer-link:hover {
+  color: #ffffff;
+}
+
+.ejie-footer-copyright {
+  color: rgba(255,255,255,0.6);
+}
+
+.ejie-footer-images {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.ejie-footer-bg {
+  width: 100%;
+  display: block;
+}
+
+.ejie-footer-claim {
+  position: absolute;
+  z-index: 2;
+  max-width: 100%;
+}
+
+/* ===== COMPONENT OVERRIDES ===== */
+
+/* Active menu item highlight */
+.p-menuitem-active .p-menuitem-link {
+  color: var(--primary-color) !important;
 }
 
 .p-component {
   transition: all 0.2s ease;
 }
 
-/* Botón del calendario integrado con el input */
 .p-calendar .p-inputtext {
     border-top-right-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
@@ -90,7 +424,7 @@ body {
     border-left: none !important;
     border-top-left-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
-    height: 39px !important; /* Altura idéntica al input */
+    height: 39px !important;
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -100,13 +434,11 @@ body {
     background: var(--surface-ground) !important;
 }
 
-/* Forzar posición del calendario debajo del input */
 .calendar-popup-below {
     margin-top: 2px !important;
     z-index: 10000 !important;
 }
 
-/* Calendario más compacto y elegante */
 .p-datepicker {
     padding: 0.5rem !important;
     min-width: 250px !important;
@@ -140,14 +472,13 @@ body {
     padding: 0.4rem 0 !important;
 }
 
-/* Combo de filas por página compacto y sin cortes */
 .p-paginator .p-dropdown {
     height: 2rem !important;
-    width: 4.8rem !important; /* Un poco más de ancho para 3 dígitos */
+    width: 4.8rem !important;
 }
 
 .p-paginator .p-dropdown .p-dropdown-trigger {
-    width: 1.5rem !important; /* Flecha más estrecha para dar espacio al texto */
+    width: 1.5rem !important;
 }
 
 .p-paginator .p-dropdown .p-dropdown-label {
@@ -155,10 +486,9 @@ body {
     font-size: 0.8rem !important;
     display: flex;
     align-items: center;
-    justify-content: center; /* Centrar el número */
+    justify-content: center;
 }
 
-/* Redondeado de tabla sin usar overflow-hidden en el padre */
 .p-datatable .p-datatable-thead > tr:first-child > th:first-child { border-top-left-radius: 12px; }
 .p-datatable .p-datatable-thead > tr:first-child > th:last-child { border-top-right-radius: 12px; }
 .p-datatable .p-paginator-bottom { 
@@ -166,7 +496,6 @@ body {
     border-bottom-right-radius: 12px; 
 }
 
-/* Animación de apertura suave (tipo Fade) para evitar saltos visuales */
 .p-connected-overlay-enter {
     opacity: 0 !important;
     transform: scale(0.95) !important;
@@ -187,7 +516,6 @@ body {
     transition: opacity 100ms linear !important;
 }
 
-/* Ocultar preventivamente overlays que aún no se han posicionado (están en 0,0) */
 .p-datepicker[style*="top: 0px"][style*="left: 0px"],
 .p-dropdown-panel[style*="top: 0px"][style*="left: 0px"] {
     visibility: hidden !important;
@@ -197,31 +525,30 @@ body {
     position: relative;
 }
 
-/* Paleta de colores SOFT para botones sólidos */
+/* Soft color palette for PrimeReact buttons */
 .p-button.p-button-success:not(.p-button-text):not(.p-button-outlined) {
-    background: #34d399 !important; /* Emerald 400 */
+    background: #34d399 !important;
     border-color: #34d399 !important;
 }
 
 .p-button.p-button-info:not(.p-button-text):not(.p-button-outlined) {
-    background: #60a5fa !important; /* Blue 400 */
+    background: #60a5fa !important;
     border-color: #60a5fa !important;
 }
 
 .p-button.p-button-danger:not(.p-button-text):not(.p-button-outlined) {
-    background: #fb7185 !important; /* Rose 400 */
+    background: #fb7185 !important;
     border-color: #fb7185 !important;
 }
 
 .p-button.p-button-secondary:not(.p-button-text):not(.p-button-outlined) {
-    background: #94a3b8 !important; /* Slate 400 */
+    background: #94a3b8 !important;
     border-color: #94a3b8 !important;
 }
 
-/* Estados deshabilitados para botones sólidos (aún más claros) */
 .p-button:disabled:not(.p-button-text):not(.p-button-outlined) {
     opacity: 0.5 !important;
-    background: #e2e8f0 !important; /* Gris muy claro */
+    background: #e2e8f0 !important;
     border-color: #e2e8f0 !important;
-    color: #94a3b8 !important; /* Texto en gris suave */
+    color: #94a3b8 !important;
 }

@@ -1,13 +1,11 @@
-import React from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { Menubar } from 'primereact/menubar';
-import { Avatar } from 'primereact/avatar';
-import { Dropdown } from 'primereact/dropdown';
-import { useTranslation } from 'react-i18next';
-import type { MenuItem } from 'primereact/menuitem';
+import { Avatar } from "primereact/avatar";
+import { Dropdown } from "primereact/dropdown";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-import api from '../api';
+import api from "../api";
 
 const MainLayout: React.FC = () => {
   const { user } = useAuth();
@@ -16,142 +14,204 @@ const MainLayout: React.FC = () => {
   const { t, i18n } = useTranslation();
 
   const languages = [
-    { label: 'Castellano', value: 'es' },
-    { label: 'Euskera', value: 'eu' }
+    { label: "Castellano", value: "es" },
+    { label: "Euskera", value: "eu" },
   ];
 
   const changeLanguage = async (lang: string) => {
-    // Sincronizar con el backend de Spring
     try {
       await api.get(`/sessionInfo/locale?lang=${lang}`);
-      // Forzar recarga total para asegurar que todo (React + Spring) se sincronice
       window.location.reload();
     } catch (error) {
       console.error("Error sincronizando idioma con el backend", error);
     }
   };
 
-  const languageValueTemplate = (option: any, props: any) => {
-    if (option) {
-      return (
-        <div className="flex align-items-center">
-          <i className="pi pi-globe mr-2 text-primary" style={{ fontSize: '0.9rem' }}></i>
-          <span>{option.label}</span>
-        </div>
-      );
-    }
-    return props.placeholder;
-  };
-
-  const languageOptionTemplate = (option: any) => {
-    return (
-      <div className="flex align-items-center">
-        <i className="pi pi-globe mr-2 text-primary" style={{ fontSize: '0.9rem' }}></i>
-        <span>{option.label}</span>
-      </div>
-    );
-  };
-
-  const items: MenuItem[] = [
-    {
-      label: t('pages:menu.home'),
-      icon: 'pi pi-home',
-      command: () => navigate('/'),
-      className: location.pathname === '/' ? 'p-menuitem-active' : ''
-    },
-    {
-      label: t('pages:menu.management'),
-      icon: 'pi pi-briefcase',
-      items: [
-        {
-          label: t('pages:menu.maintenance'),
-          icon: 'pi pi-list',
-          items: [
-            {
-              label: t('pages:menu.maintenance_exp'),
-              icon: 'pi pi-file',
-              command: () => navigate('/expedientes')
-            },
-            {
-              label: t('pages:menu.maintenance_per'),
-              icon: 'pi pi-users',
-              command: () => navigate('/personas')
-            },
-            {
-              label: t('pages:menu.maintenance_ani'),
-              icon: 'pi pi-paw',
-              command: () => navigate('/animales')
-            },
-            {
-              label: t('pages:menu.maintenance_lib'),
-              icon: 'pi pi-book',
-              command: () => navigate('/libros')
-            },
-            {
-              label: t('pages:menu.maintenance_ser'),
-              icon: 'pi pi-video',
-              command: () => navigate('/series')
-            },
-            {
-              label: t('pages:menu.maintenance_pel'),
-              icon: 'pi pi-ticket',
-              command: () => navigate('/peliculas')
-            }
-          ]
-        },
-        {
-          label: t('pages:menu.reports'),
-          icon: 'pi pi-chart-bar',
-          disabled: true
-        }
-      ]
-    },
-    {
-      label: t('pages:menu.settings'),
-      icon: 'pi pi-cog',
-      disabled: true
-    }
-  ];
-
-  const start = (
-    <div className="logo-section">
-      <i className="pi pi-prime text-3xl"></i>
-      <span>{t('pages:layout.appName')}</span>
-    </div>
-  );
-
-  const end = (
-    <div className="flex align-items-center gap-3">
-      <Dropdown 
-        value={i18n.language} 
-        options={languages} 
-        onChange={(e) => changeLanguage(e.value)} 
-        valueTemplate={languageValueTemplate}
-        itemTemplate={languageOptionTemplate}
-        className="p-inputtext-sm border-round-xl border-1 border-slate-200 bg-white" 
-        style={{ width: '160px' }}
-      />
-      <div className="user-badge shadow-1">
-        <i className="pi pi-user text-primary"></i>
-        <span>{user?.name} {user?.surname1}</span>
-        <Avatar label={user?.name?.[0]} shape="circle" style={{ backgroundColor: '#3b82f6', color: '#ffffff' }} />
-      </div>
-    </div>
-  );
+  const isActive = (paths: string[]) =>
+    paths.some((p) => location.pathname === p);
 
   return (
-    <div className="app-container">
-      <header className="app-header shadow-2">
-        <Menubar model={items} start={start} end={end} style={{ border: 'none', background: 'transparent' }} />
+    <div className="tw-flex tw-flex-col tw-min-h-screen">
+      {/* ===== TOP HEADER - Logos ===== */}
+      <header className="ejie-top-header">
+        <div className="ejie-top-header-inner">
+          <div className="ejie-logo"></div>
+          <a
+            href="https://www.euskadi.eus"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ejie-header-link"
+          >
+            <img
+              src="/images/euskadieus_logo.gif"
+              alt="Euskadi Eus"
+              className="ejie-euskadi-logo"
+            />
+          </a>
+        </div>
       </header>
-      
+
+      {/* ===== NAVIGATION BAR ===== */}
+      <nav className="ejie-nav">
+        <div className="ejie-nav-inner">
+          <div className="ejie-nav-left">
+            <a className="ejie-nav-brand" onClick={() => navigate("/")}>
+              <i className="pi pi-home"></i>
+              Uda
+            </a>
+
+            {/* Navigation items with dropdowns */}
+            <div className="ejie-nav-item">
+              <button
+                className={`ejie-nav-link ${isActive(["/expedientes", "/personas", "/animales", "/libros", "/series", "/peliculas"]) ? "active" : ""}`}
+              >
+                <i className="pi pi-briefcase"></i>
+                {t("pages:menu.management")}
+                <i className="pi pi-chevron-down"></i>
+              </button>
+              <div className="ejie-dropdown">
+                <div className="ejie-dropdown-item">
+                  <span className="ejie-dropdown-link">
+                    <i className="pi pi-list"></i>
+                    {t("pages:menu.maintenance")}
+                    <i className="pi pi-chevron-right"></i>
+                  </span>
+                  <div className="ejie-dropdown">
+                    <button
+                      className="ejie-dropdown-link"
+                      onClick={() => navigate("/expedientes")}
+                    >
+                      <i className="pi pi-file"></i>
+                      {t("pages:menu.maintenance_exp")}
+                    </button>
+                    <button
+                      className="ejie-dropdown-link"
+                      onClick={() => navigate("/personas")}
+                    >
+                      <i className="pi pi-users"></i>
+                      {t("pages:menu.maintenance_per")}
+                    </button>
+                    <button
+                      className="ejie-dropdown-link"
+                      onClick={() => navigate("/animales")}
+                    >
+                      <i className="pi pi-paw"></i>
+                      {t("pages:menu.maintenance_ani")}
+                    </button>
+                    <button
+                      className="ejie-dropdown-link"
+                      onClick={() => navigate("/libros")}
+                    >
+                      <i className="pi pi-book"></i>
+                      {t("pages:menu.maintenance_lib")}
+                    </button>
+                    <button
+                      className="ejie-dropdown-link"
+                      onClick={() => navigate("/series")}
+                    >
+                      <i className="pi pi-video"></i>
+                      {t("pages:menu.maintenance_ser")}
+                    </button>
+                    <button
+                      className="ejie-dropdown-link"
+                      onClick={() => navigate("/peliculas")}
+                    >
+                      <i className="pi pi-ticket"></i>
+                      {t("pages:menu.maintenance_pel")}
+                    </button>
+                  </div>
+                </div>
+                <div className="ejie-dropdown-divider"></div>
+                <button
+                  className="ejie-dropdown-link"
+                  disabled
+                  style={{ opacity: 0.5 }}
+                >
+                  <i className="pi pi-chart-bar"></i>
+                  {t("pages:menu.reports")}
+                </button>
+              </div>
+            </div>
+
+            <div className="ejie-nav-item">
+              <button
+                className="ejie-nav-link"
+                disabled
+                style={{ opacity: 0.5 }}
+              >
+                <i className="pi pi-cog"></i>
+                {t("pages:menu.settings")}
+              </button>
+            </div>
+          </div>
+
+          <div className="ejie-nav-right">
+            <div className="ejie-lang-dropdown">
+              <Dropdown
+                value={i18n.language}
+                options={languages}
+                onChange={(e) => changeLanguage(e.value)}
+                style={{ width: "130px" }}
+              />
+            </div>
+
+            <a
+              href="https://github.com/UDA-EJIE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ejie-nav-tool"
+              title="GitHub"
+            >
+              <i className="pi pi-github"></i>
+            </a>
+
+            <div className="ejie-nav-user">
+              <i className="pi pi-user"></i>
+              <span className="tw-hidden md:tw-inline">
+                {user?.name} {user?.surname1}
+              </span>
+              <Avatar
+                label={user?.name?.[0]}
+                shape="circle"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  color: "#ffffff",
+                  fontWeight: 600,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* ===== CONTENT ===== */}
       <main className="main-content">
         <Outlet />
       </main>
 
-      <footer className="app-footer">
-        <div className="mb-2 font-semibold">UDA Framework v2026</div>
-        <div className="opacity-70">&copy; {new Date().getFullYear()} {t('pages:layout.footer')}</div>
+      {/* ===== FOOTER ===== */}
+      <footer className="ejie-footer">
+        <div className="ejie-footer-top">
+          <a href="#" className="ejie-footer-link">
+            {t("pages:layout.legalNotice")}
+          </a>
+          <span className="ejie-footer-copyright">
+            &copy; {new Date().getFullYear()} &middot;{" "}
+            {t("pages:layout.footer")}
+          </span>
+        </div>
+        <div className="ejie-footer-images">
+          <img
+            className="ejie-footer-bg"
+            src="/images/web01-2014_oina_logo_atzekoa.gif"
+            alt=""
+          />
+          <img
+            className="ejie-footer-claim"
+            src="/images/web01-2014_claim_pertsona_helburu_es.gif"
+            alt="Pertsona helburu"
+          />
+        </div>
       </footer>
     </div>
   );

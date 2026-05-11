@@ -54,7 +54,12 @@
   },
   "layout": {
     "appName": "UDA Demo App",
-    "footer": "EJIE - Eusko Jaurlaritza. Eskubide guztiak erreserbatuta."
+    "footer": "Eusko Jaurlaritza - Gobierno Vasco. Eskubide guztiak erreserbatuta.",
+    "legalNotice": "Lege Oharra",
+    "welcome": "Ongi etorri UDA React berrira",
+    "welcomeSub": "Saioa behar bezala hasi duzu. Hautatu mantentze-lan bat menutik hasteko.",
+    "userInfo": "Saioaren informazioa",
+    "quickAccess": "Sarbide azkarra"
   },
   "selection": {
     "pageSelected": "Orrialde honetako {{count}} erregistroak hautatu dira.",

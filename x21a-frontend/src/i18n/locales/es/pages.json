@@ -54,7 +54,12 @@
   },
   "layout": {
     "appName": "UDA Demo App",
-    "footer": "EJIE - Gobierno Vasco. Todos los derechos reservados."
+    "footer": "Eusko Jaurlaritza - Gobierno Vasco. Todos los derechos reservados.",
+    "legalNotice": "Aviso Legal",
+    "welcome": "Bienvenido a la nueva UDA con React",
+    "welcomeSub": "Has iniciado sesión correctamente. Selecciona un mantenimiento del menú para empezar.",
+    "userInfo": "Información de sesión",
+    "quickAccess": "Acceso rápido"
   },
   "selection": {
     "pageSelected": "Se han seleccionado los {{count}} registros de esta página.",

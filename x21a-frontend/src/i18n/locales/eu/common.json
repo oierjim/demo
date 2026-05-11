@@ -32,5 +32,9 @@
   "labels": {
     "yes": "Bai, ezabatu",
     "no": "Ez"
+  },
+  "user": {
+    "name": "Izena",
+    "roles": "Rolak"
   }
 }
