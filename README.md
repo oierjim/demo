@@ -38,20 +38,24 @@ Interfaz de usuario moderna construida con PrimeReact y TanStack Query.
 
 ### 📋 Requisitos
 - **Node.js 18+**
-- **npm**
+- **pnpm** (si no lo tienes, ejecuta: `npm install -g pnpm`)
 
 ### 🛠️ Instalación y Ejecución
-1. Navega a la carpeta del frontend:
+1. Instala pnpm globalmente (si no lo tienes):
+   ```bash
+npm install -g pnpm@latest
+   ```
+2. Navega a la carpeta del frontend:
    ```bash
    cd x21a-frontend
    ```
 2. Instala las dependencias:
    ```bash
-   npm install
+   pnpm install
    ```
 3. Inicia el servidor de desarrollo:
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 
@@ -77,9 +81,9 @@ Los mantenimientos actualmente implementados incluyen **Expedientes**, **Persona
 
 ## 🛠️ Comandos Útiles
 
-| Tarea | Backend (Maven) | Frontend (npm) |
+| Tarea | Backend (Maven) | Frontend (pnpm) |
 | :--- | :--- | :--- |
 | **Limpiar** | `mvn clean` | `rm -rf node_modules` |
-| **Compilar** | `mvn compile` | `npm run build` |
-| **Ejecutar** | `mvn spring-boot:run` | `npm run dev` |
-| **Linter** | - | `npm run lint` |
+| **Compilar** | `mvn compile` | `pnpm build` |
+| **Ejecutar** | `mvn spring-boot:run` | `pnpm dev` |
+| **Linter** | - | `pnpm lint` |

@@ -19,10 +19,10 @@ Aplicación full-stack de mantenimientos genéricos CRUD. Backend Spring Boot 2.
 - `mvn clean` — limpiar
 
 ### Frontend (`x21a-frontend/`)
-- `npm install` — instalar dependencias
-- `npm run dev` — servidor desarrollo (puerto 5173, proxy a 8080)
-- `npm run build` — build de producción
-- `npm run lint` — ESLint
+- `pnpm install` — instalar dependencias
+- `pnpm dev` — servidor desarrollo (puerto 5173, proxy a 8080)
+- `pnpm build` — build de producción
+- `pnpm lint` — ESLint
 
 ## Arquitectura
 
@@ -39,6 +39,7 @@ Aplicación full-stack de mantenimientos genéricos CRUD. Backend Spring Boot 2.
 - Lazy loading por ruta con `React.lazy`
 
 ## Convenciones
+- **pnpm obligatorio**: usar exclusivamente `pnpm` para el frontend. NO usar npm ni yarn.
 - **Fechas**: usar `java.util.Date` en backend, `Calendar` de PrimeReact en frontend
 - **IDs**: toda entidad debe exponer `id` via `getId()`/`setId()` (alias si PK se llama distinto)
 - **Rutas**: añadir en `main.tsx` con `React.lazy`
