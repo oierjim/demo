@@ -47,15 +47,16 @@ Interfaz de usuario moderna construida con PrimeReact y TanStack Query.
 
 1. Instala pnpm globalmente (si no lo tienes):
 
-```bash
-npm install -g pnpm@latest
-```
+   ```bash
+   npm install -g pnpm@latest
+   ```
 
 2. Navega a la carpeta del frontend:
 
-```bash
-cd x21a-frontend
-```
+   ```bash
+   cd x21a-frontend
+   ```
+
 3. Instala las dependencias:
    ```bash
    pnpm install
